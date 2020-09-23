@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-3 d-none d-md-block"></div>
+            <div class="col">
+                {% bootstrap_messages %}
+                <div class="card">
+                    <div class="card-body">
+                        <form method="POST" action="{% url 'configurar_dia_agenda'  %}" >
+                            {% csrf_token %}   
+                            {% bootstrap_form form %}
+                            <input type="hidden" name="agenda_id" value="{{agenda.id}}">
+                            <input type="hidden" name="dia" value="{{dia}}">
+                            <button class="btn btn-dark btn-block" type="submit" >
+                                <i class="fas fa-save"> </i>
+                                Registrar Configuração
+                            </button>
+                        </form>
+                    </div>
+                </div>               
+            </div>
+            <div class="col-3 d-none d-md-block"></div>
+        </div>
+    </div>
+
+    {% bootstrap_javascript jquery="full" %}
+    
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="popover"]').popover();   
+        });
+    </script>
+    
+{% endblock %}
+    

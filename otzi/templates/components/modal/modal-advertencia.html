@@ -1,0 +1,29 @@
+
+
+  
+
+  <!-- EXCLUIR NOTIFICAÇÃO -->
+  <div class="modal fade " id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+      <div class="modal-content bg-dark fundo">
+
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Cancelar">
+            <span aria-hidden="true" class="text-danger" style="font-size: 40px;"><strong>&times;</strong></span>
+          </button>
+        </div>
+
+        <div class="modal-body bg-white">
+          <strong class="text-dark">Tem certeza de que deseja remover esta notificação?</strong>
+          <br>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-dark" data-dismiss="modal">Cancelar</button>
+            <a class="btn btn-danger float-right "  href="{% url 'remover_notificacao' n.notificacao.id %}"><i class="fas fa-trash-alt"></i> Sim Remover</a>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>

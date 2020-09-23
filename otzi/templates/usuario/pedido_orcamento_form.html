@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load bootstrap4 %}
+
+{% block content %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script>
+
+  <div class="container">
+    <div class="row">
+        <div class="col-2"></div>
+        <div class="col">
+            {% bootstrap_messages messages %}
+
+            <div class="card">
+                <div class="card-body">
+                  <h4 class="text-muted text-center mt-4 mb-4"> PEDIDO DE ORÇAMENTO </h4>
+                  <form method="POST" action="{% url 'formulario_pedido_orcamento' %}" enctype="multipart/form-data" >
+                    {% csrf_token %}
+                    {% bootstrap_form form exclude='img_1, img_2, img_3,tatuadores' %}                                                       
+                                     
+                    <p><span class="text-secondary" style="font-size: 16px;"><strong> 
+                      Você pode escolher até três imagens que ajudem o tatuador a compreender o que você deseja, 
+                      podendo ser a imagem de uma tatuagem ou de uma arte que sirva de inspiração.
+                    </strong></span></p>
+
+                    <div class="row">
+                      <div class="col">
+                        {% bootstrap_field form.img_1 %}
+                      </div>
+                      <div class="col"> 
+                        <img id="img_1" style="display:none;">
+                      </div>
+                    </div>
+                    
+                    <div class="row">
+                      <div class="col">
+                        {% bootstrap_field form.img_2 %}
+                      </div>
+                      <div class="col"> 
+                        <img id="img_2" style="display:none;">
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col">
+                        {% bootstrap_field form.img_3 %}
+                      </div>
+                      <div class="col"> 
+                        <img id="img_3" style="display:none;">
+                      </div>
+                    </div>
+                                    
+                    <button type="submit" class="btn btn-dark btn-block"> 
+                      <strong>Enviar Pedido</strong>
+                      <strong class="bg-success pl-2 pr-2 rounded float-right"><i class="fa fa-arrow-right"></i></strong>
+                    </button>
+                  </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-2"></div>
+    </div>
+  </div>
+
+<script>
+
+  $("#id_img_1").change(function(){
+    if (this.files && this.files[0]) {
+      var file = new FileReader();
+      file.onload = function(e) {                
+        $("#img_1").attr({
+          "src": e.target.result,
+          "width": 70,
+          "height": 70,
+          "class": "img rounded"
+        }).css({
+          "display":"block"
+        });
+      };       
+      file.readAsDataURL(this.files[0]);
+    }
+  });
+
+  $("#id_img_2").change(function(){
+    if (this.files && this.files[0]) {
+      var file = new FileReader();
+      file.onload = function(e) {                
+        $("#img_2").attr({
+          "src": e.target.result,
+          "width": 70,
+          "height": 70,
+          "class": "img rounded"
+        }).css({
+          "display":"block"
+        });
+      };       
+      file.readAsDataURL(this.files[0]);
+    }
+  });
+
+  $("#id_img_3").change(function(){
+    if (this.files && this.files[0]) {
+      var file = new FileReader();
+      file.onload = function(e) {                
+        $("#img_3").attr({
+          "src": e.target.result,
+          "width": 70,
+          "height": 70,
+          "class": "img rounded"
+        }).css({
+          "display":"block"
+        });
+      };       
+      file.readAsDataURL(this.files[0]);
+    }
+  });
+
+</script>
+{% endblock %}

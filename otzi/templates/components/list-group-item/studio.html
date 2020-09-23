@@ -1,0 +1,22 @@
+<div class="m-1">   
+    <div class="list-group-item shadow">                                               
+        <span class="text-dark ml-1 mt-1" style="font-size: 26px;">
+            <strong>{{obj.cidade}} - {{obj.estado}}</strong>
+            <button class="btn btn-dark btn-sm float-right  mt-2" onclick="studioGridItem({{obj.id}})"><i class="fas fa-plus"></i> <strong>Detalhes</strong> </button>       
+        </span>
+        
+    </div>
+    <div class="list-group-item shadow" id="studio-{{obj.id}}" style="display:none;">
+        <div class="media-body">
+            <p><span><strong>CEP</strong></span> {{obj.cep}}</p>   
+            <p><span><strong>Cidade</strong></span> {{obj.cidade}} - {{obj.estado}} </p>            
+            <p><span><strong>Bairro</strong></span> {{obj.bairro}} </p>
+            <p><strong>Rua</strong> {{obj.rua}} N° {{obj.numero}} </p>
+            
+            {% if obj.complemento %}
+                <p><span><strong>Complemento</strong>></span> {{obj.complemento}} </p>   
+            {% endif %}
+                                                                                                             
+        </div> 
+    </div>
+</div>

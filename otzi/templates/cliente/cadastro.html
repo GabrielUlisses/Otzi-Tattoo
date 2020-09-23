@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+
+
+{% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script>
+
+<style>
+    .content{
+        padding-top: 4px;
+        padding-bottom: 20px;
+    }
+    
+</style>
+    <div class="container">
+        <div class="row">
+            <div class="col-2 d-none d-md-block"></div>
+            <div class="col border border-secondary rounded content">
+                {% bootstrap_messages %}
+                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="pills-info-tab" data-toggle="pill" href="#pills-info" role="tab" aria-controls="pills-info" aria-selected="false">info</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link " id="pills-Cliente-tab" data-toggle="pill" href="#pills-Cliente" role="tab" aria-controls="pills-Cliente" aria-selected="false">Cliente</a>
+                    </li>
+                    
+                  </ul>
+                  <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="pills-info" role="tabpanel" aria-labelledby="pills-info-tab">
+                        <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent bibendum massa tortor, quis convallis lacus vehicula in. Praesent id imperdiet dolor. Donec ut augue pharetra, tempor leo a, vehicula mi. Phasellus condimentum, leo a faucibus consequat, eros dolor porttitor diam, ut vehicula dolor augue eu urna. Fusce mattis pharetra odio, in imperdiet tortor tempus a. Integer aliquet orci pulvinar nibh suscipit fermentum. Nunc ut augue libero. Curabitur scelerisque sem a quam elementum ultricies. Proin tempor eleifend nisi, et pellentesque nulla vestibulum at. </span>
+                        <span>Fusce nec felis ullamcorper, molestie urna nec, tincidunt magna. Mauris viverra tortor sed elit consequat, nec porttitor quam consequat. In tempus, velit id auctor aliquam, libero augue auctor eros, vitae mollis enim nibh sed arcu. Vivamus aliquam sapien a imperdiet dapibus. Integer finibus magna ante, in rutrum turpis convallis nec. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec mattis quis risus et euismod. Donec tempus consectetur massa, non sagittis mauris mollis sed. In rutrum ipsum in dictum porttitor. Maecenas pulvinar erat in ipsum tempor, ac tempor urna porta. Maecenas maximus nisi at nulla iaculis, sed fringilla neque pellentesque. </span>
+                        <span>Vivamus eget ultrices justo. Nulla facilisis luctus rhoncus. Suspendisse potenti. Praesent vitae fermentum enim. In at sem non ante pharetra aliquet dignissim ut nisl. Cras vitae dui lacinia, posuere ligula porttitor, interdum lectus. Phasellus eget quam ac orci tristique condimentum. Maecenas tempus, magna eu dapibus ullamcorper, dui magna maximus justo, vel placerat nulla mi et sapien. Cras pulvinar lobortis enim, at semper enim egestas a. Aliquam turpis ex, congue ornare tellus at, lobortis rhoncus nulla. Etiam laoreet, tortor id volutpat convallis, lectus dolor fringilla leo, dignissim suscipit augue felis in lorem. Nunc rutrum facilisis magna, vel faucibus dolor rhoncus semper. Quisque id risus urna. </span>
+                        
+                    </div>
+                    <div class="tab-pane fade" id="pills-Cliente" role="tabpanel" aria-labelledby="pills-Cliente-tab">
+
+                        <form method="POST" action="{% url 'cadastrar_cliente' %}" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <center>
+                                <p class="text-seccondary display-6">
+                                    <h3>Torne-se um Cliente.</h3>
+                                </p>
+                            </center>
+                           
+                            <input type="hidden" name="especializacao" value="cliente">
+                            {% bootstrap_form form %}                   
+                            <button class="btn btn-dark btn-block text-white">
+                                <i class="fas fa-save"></i> Cadastrar
+                            </button>
+                        </form>
+
+                    </div>               
+                  </div>
+                
+            </div>
+            <div class="col-2 d-none d-md-block"></div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $("#cep").mask("00000-000");
+        $("#numero").mask("0000");
+        $("#cpf").mask("000.000.000-00");
+        $("#celular").mask("(00) 0000-0000");
+        $("#cnpj").mask("00.000.000/0000-00");
+        $("#alvara").mask("0000000000");
+        $("#telefone").mask("(00) 0000-0000");
+        $(".cpf").mask("000.000.000-00");
+        $(".celular").mask("(00) 0000-0000");
+        
+    </script>
+{% endblock %}
+    

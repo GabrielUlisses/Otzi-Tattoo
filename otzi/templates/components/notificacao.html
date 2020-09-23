@@ -1,0 +1,43 @@
+<div class="notificacao mb-2" id="{{n.notificacao.id}}">
+    <div class="card bg-dark">
+        <div class="card-body">
+            <!--<button class="btn btn-dark" type="button" data-toggle="collapse" data-target="#notificacao{{n.id}}" aria-expanded="false" aria-controls="content">
+                <span class="text-left align-baseline title">Titulo aqui</span> 
+            </button>-->
+            <button class="btn btn-notificacao" id="{{n.notificacao.id}}">
+                <span class="text-left align-baseline title">{{ n.notificacao.titulo }}</span>
+            </button>
+            {% if n.lido == True %}
+                <button class="btn btn-danger btn-remover" id="btn-remover-{{n.notificacao.id}}">
+                    <span class="text-left align-baseline title" data-toggle="modal" data-target="#modal"><i class="fas fa-trash-alt"></i> Excluir </span>
+                </button> 
+            {% else %}
+                <button class="btn btn-danger btn-remover" id="btn-remover-{{n.notificacao.id}}" style="display: none;" >
+                    <span class="text-left align-baseline title" data-toggle="modal" data-target="#modal"><i class="fas fa-trash-alt"></i> Excluir </span>
+                </button> 
+            {% endif %}
+            <span class="text-light float-right align-text-bottom">
+                {% if n.lido == False %}
+                    <span id="status-lido-{{n.notificacao.id}}" class="badge badge-light m-2"> <i class="far fa-bell"></i>Não lida</span>
+                {% endif %}
+
+                {{ n.notificacao.data_criacao | date:'d/m/Y h:m'}}
+      
+            </span> 
+        </div>
+    </div>
+
+    <div class="collapse" id="notificacao-{{n.notificacao.id}}">
+        <div class="card card-body msg">
+                <p class="text-dark"><strong>Autor: {{n.notificacao.emissor | default:"Sistema" | upper}}</strong></p>
+
+                
+                {% autoescape off %}
+                    <strong class="text-dark ">{{ n.notificacao.conteudo }}</strong>
+                {% endautoescape %}               
+                
+        </div>
+        <div class="card-footer bg-dark">
+        </div>
+    </div>
+</div>

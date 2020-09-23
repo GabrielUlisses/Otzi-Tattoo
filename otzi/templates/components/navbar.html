@@ -1,0 +1,31 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+
+        <button type="button" id="sidebarCollapse" class="btn btn-seccondary">
+          <strong><i class="fas fa-bars"></i></strong> 
+        </button>
+        <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="fas fa-align-justify"></i>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+            <ul class="nav navbar-nav ml-auto">                             
+                {% if user.is_authenticated %}   
+                    <li class="nav-item">                               
+                        <a class="nav-link text-light" href="{% url 'logout' %}">                                   
+                            <strong> <i class="fas fa-sign-out-alt"></i> Sair </strong>                            
+                        </a>
+                    </li>                    
+                {% else %}
+                    <li class="nav-item">                               
+                        <a class="nav-link text-light" href="{% url 'pagina_login' %}">
+                            <strong > <i class="fas fa-sign-in-alt "></i> Entrar </strong>                          
+                        </a>
+                    </li>
+                {% endif %}                                          
+            </ul>
+        </div>
+    </div>
+</nav>

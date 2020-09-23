@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% load bootstrap4 %}
+{% load static %}
+
+{% block content %}
+
+<style type="text/css">
+  hr{
+    background-color: grey;
+  }
+</style>
+
+<div class="container">
+     <div class="row">
+        <div class="col-2 d-none d-md-block"></div>
+        <div class="col">
+            <div class="card bg-dark">
+                <div class="card-body">
+                    <div class="media">
+                        
+                        <img class="img rounded-circle mt-0" {% if usuario.imagem %} src="  {{usuario.imagem.thumbnail.url}}"{% else %} src="{% static 'img/user.png' %}" {% endif %} width="70" height="70">
+                            
+                        <div class="media-body text-light">
+                            <h5 class="mt-3 ml-3"><strong>{{usuario.nome}} - {{usuario.usuario.username}}</strong></h5>
+                            <div class="d-none d-md-block">
+                                <div class="btn-group float-right">
+                                    <button class="btn btn-secondary btn-sm" onclick="contentUser()" ><strong><i class="fas fa-user"></i> usuário</strong></button>
+                                    <button class="btn btn-secondary btn-sm" onclick="publicacaoGrid()" ><strong><i class="fas fa-file-alt"></i> publicações</strong></button>
+                                    <button class="btn btn-secondary btn-sm" onclick="connect('{{usuario.usuario.username}}',{{usuario.usuario.id}})"><strong><i class="fas fa-comment-dots"></i> Mensagem</strong></button>                            
+                                </div>  
+                            </div>
+                            <div class="d-block d-md-none">
+                                <div class="dropdown dropleft float-right">
+                                    <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-cog"></i>
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <button class="dropdown-item" onclick="contentUser()" ><strong><i class="fas fa-user"></i> usuário</strong></button>
+                                        <button class="dropdown-item" onclick="publicacaoGrid()" ><strong><i class="fas fa-file-alt"></i> publicações</strong></button>
+                                        <button class="dropdown-item" onclick="connect('{{usuario.usuario.username}}',{{usuario.usuario.id}})"><strong><i class="fas fa-comment-dots"></i> Mensagem</strong></button>                        
+                                    </div>
+                                </div>
+                            </div>       
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-2 d-none d-md-block"></div>
+     </div>
+</div>
+<br>
+
+<div id="content-user" class="container" >
+    <div class="row">
+        <div class="col-2 d-none d-md-block"></div>
+        <div class="col">
+            <div class="card bg-dark">
+                <div class="card-body">
+                    <p class="ml-2 text-white"><strong><span style="font-size:20px;"><i class="fas fa-user ml-2 mr-1"></i> </span>  <span class="text-light">{{usuario.nome}}</span></strong></p>
+                    <hr>
+                    <p class="ml-2 text-white"><strong><i class="fas fa-envelope ml-2 mr-1"></i>  {{usuario.usuario.email}}</strong></p>                   
+                    {% if usuario.desenhista %}
+                        <hr>
+                        <p class="ml-2 text-white">
+                            <strong><i class="fas fa-palette ml-2 mr-1"></i>  Usuário Desenhista</strong>                        
+                        </p>             
+                    {% endif %}
+
+                    {% if usuario.tatuador %}
+                        <hr>
+                        <p class="ml-2 text-white">
+                            <strong><i class="fas fa-user ml-2 mr-1"></i>  Usuário Tatuador</strong>
+                        </p>               
+                        
+                    {% endif %}
+                        
+                </div>
+            </div>
+        </div>
+        <div class="col-2 d-none d-md-block"></div>
+    </div>
+</div>
+
+<div id="publicacao-grid" class="container" style="display:none;">
+    <div class="row">
+        <div class="col-2 d-none d-md-block"></div>
+        <div class="col">
+            
+            {% if publicacoes %}
+                <div class="card-group">
+                    {% for p in publicacoes %}
+                        {% include "../components/publicacao_card.html" %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="card bg-dark">
+                    <div class="cad-body">
+                        <center>
+                            <span class="text-light p-3" style="font-size: 28px;">Nenhuma publicação foi encontrada... <i class="fas fa-frown"></i></span>
+                        </center>
+                    </div>
+                </div>
+            {% endif %}
+                
+        </div>
+        <div class="col-2 d-none d-md-block"></div>
+    </div>
+</div>
+
+{% include "../components/to-top-button.html" %}
+
+<script>
+
+    function hideAll(){
+        $("#publicacao-grid").hide(500);
+        $("#content-user").hide(500);
+    }
+
+    function publicacaoGrid(){
+        hideAll();
+        $("#publicacao-grid").show(500);
+        
+    }
+
+    function contentUser(){
+        hideAll();
+        $("#content-user").show(500);
+    }
+                              
+    function connect(user,id){
+        param = id > {{request.user.id}} ? id + "_" + {{request.user.id}} : {{request.user.id}} + "_" + id;
+        window.location.pathname = '/chat/' + param + '/';
+    } 
+
+</script>
+{% endblock %}

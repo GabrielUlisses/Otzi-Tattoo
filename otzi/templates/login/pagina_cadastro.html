@@ -1,0 +1,170 @@
+
+{% load static %}
+{% load bootstrap4 %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Otzi - cadastro</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    {% bootstrap_css %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script>
+    <!-- Font Awesome JS -->
+	<script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+	<script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+	
+</head>
+<style>
+    .fundo_escuro{
+        background-color: black;
+    }
+    .fundo_claro{
+        border-radius: 20px;
+        background-color: white;
+        margin-top: 60px;
+        margin-bottom: 60px;
+    }
+    .img{
+			max-width: 100px;
+			max-height: 100px;
+    }
+    .btn{
+        border-radius: 20px;
+    }
+
+</style>
+
+<body class="fundo_escuro">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                {% bootstrap_messages %}
+            </div>
+        </div>
+       
+        <div class="row" id="termos">
+            <div class="col-3 d-none d-md-block"></div>
+            <div class="col-1 d-md-none"></div>
+            <div class="col fundo_claro">              
+                <div>
+                    <br>
+                    <center><h3><strong>Termos de Registro</strong></h3></center>
+                    <br>
+                    <p><strong>O sistema Otzi-Tattoo surge da intenção de proporcionar ao público apreciador de
+                        tatuagens um ambiente seguro onde possam publicar, compartilhar
+                        materiais do gênero e de um modo geral trocar experiências, seja sobre
+                        tatuagens já feitas, sobre a arte em si ou sobre a atuação profissional
+                        como tatuador. Tem-se por objetivo aproximar os personagens
+                        relacionados à tatuagem e simplificar a troca de informação entre os mesmos.</strong></p>
+                    <p><strong>Para tornar a experiência de uso a melhor possível, necessitamos que esteja de acordo com as regras e normas a seguir:</strong></p>
+                    <p><strong>1. Toda publicação não poderá conter conteúdo que seja considerado inadequado, ofensivo ou provocativo,
+                        o autor da publicação pode ter sua publicação denunciada, e a mesma poderá ser ocultada, em caso de reincidência o usuário
+                        poderá ser desativado do sistema sem aviso prévio pelos administradores.</strong> </p>
+                    <p><strong>2. Com o registro neste site, você fica ciente de que a Administração pode tomar quaisquer decisões que julgue apropriadas no sentido de garantir o bom funcionamento deste espaço, 
+                        e a autoriza expressamente a remover, editar, mover ou fechar qualquer mensagem, tópico, seção ou o próprio fórum, negar, suspender ou desativar registros ou cadastros, ou ainda tomar quaisquer outras medidas, 
+                        sem notificação prévia, a qualquer tempo, para adequação a estas regras e/ou concordância com a legislação.</strong></p>
+                    <p><strong>3. O usuário tem total responsabilidade sobre a validade e veracidade sobre seus dados utilizados no cadastro do sistema,
+                        pela parte da administração do sistema garantimos que seus dados cadastrais como senha, documento pessoal, não serão entregues a terceiros, a menos que nos autorize explicitamente, exceto para: autoridades judiciais ou outra autoridade governamental, 
+                        mediante requisição ou solicitação na forma da lei; defesa contra ações judiciais e/ou administrativas que possam resultar em nossa responsabilização; 
+                        nossos prestadores independentes, como advogados e/ou outros consultores profissionais; cadastros internacionais de spam caso seu registro tenha sido identificado como spam.</strong></p>
+                    <p><strong>4. O Otzi-Tattoo não garante a validade, veracidade ou precisão de qualquer conteúdo publicado neste site, no seu todo ou em parte, portanto o uso de informações de qualquer natureza 
+                        (por exemplo texto, imagens, etc.) presentes dentro do fórum ou suas subseções é de sua exclusiva responsabilidade.</strong></p>
+                    <p><strong>5. O Otzi-Tattoo pode ser acessado livremente, portanto atente-se para o fato de que o conteúdo postado por você ou qualquer usuário é público e poderá ser compartilhado por terceiros em outros sites ou meios. 
+                        Você isenta o Otzi-Tattoo de responsabilidade pelo uso desse conteúdo em qualquer outro meio por terceiros sem autorização.</strong></p>
+                    
+                        <br>
+
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" name="input-termos" id="input-termos">
+                        <label class="custom-control-label" for="input-termos">Li, e concordo com os termos de registro.</label>
+                    </div>
+                    <br>
+                    <button name="btn-registrar" onclick="registrar()" class="btn btn-success btn-block" style="display:none;"><strong> <i class="fas fa-check"></i> Continuar Registro.</strong></button>                        
+                </div>
+                <br>
+            </div>
+
+            <div class="col-1 d-md-none"></div>
+            <div class="col-3 d-none d-md-block"></div>
+        </div>
+
+        <div class="row" id="formulario" style="display: none;">
+            <div class="col-4 d-none d-md-block"></div>
+            <div class="col-1 d-md-none"></div>
+            <div class="col fundo_claro">
+                <br>
+                <center>
+					<img src="{% static 'img/Logo.jpg'%}" class="img img-fluid img-thumbnail rounded-circle">
+				</center>
+                <form method="POST" class="form" action="{% url 'submit_registro' %}" enctype="multipart/form-data">
+
+                    {% csrf_token %} 
+                    
+                    {% for hidden_field in user_form.hidden_fields %}                       
+                        {{ hidden_field }}
+                    {% endfor %}
+
+
+                    <strong>{% bootstrap_label user_form.username.label  %}</strong>
+                    {% bootstrap_field user_form.username show_label=False  addon_before='<i class="fas fa-user"></i>'  %}
+
+                    <strong>{% bootstrap_label user_form.password.label  %}</strong>
+                    {% bootstrap_field user_form.password show_label=False  addon_before='<i class="fas fa-lock"></i>'  %}
+
+                    <strong>{% bootstrap_label user_form.confirm_password.label  %}</strong>
+                    {% bootstrap_field user_form.confirm_password show_label=False  addon_before='<i class="fas fa-lock"></i>'  %}
+
+                    <strong>{% bootstrap_label user_form.email.label  %}</strong>
+                    {% bootstrap_field user_form.email show_label=False  addon_before='<i class="fas fa-envelope"></i>'  %}
+
+                    <strong>{% bootstrap_label usuario_form.nome.label  %}</strong>
+                    {% bootstrap_field usuario_form.nome show_label=False  addon_before='<i class="fas fa-user"></i>'  %}                                            
+                  
+                    <br>
+                    <div class="custom-file">
+                        {{ usuario_form.imagem }}
+                        <label class="custom-file-label" for="customFile"><strong>{{usuario_form.imagem.label}}</strong></label>
+                    </div>
+
+                    <hr class="mt-5">
+					<br>
+                        
+                    <button type="submit" class="btn btn-dark btn-block">
+                        <strong> <i class="fas fa-user-plus"></i> Cadastro</strong>
+                    </button> 
+                </form>
+                <br>
+            </div>
+
+            <div class="col-1 d-md-none"></div>
+            <div class="col-4 d-none d-md-block"></div>
+        </div>
+    </div>
+   <footer>
+       <script>
+            $("input[name='input-termos']").change(function(){             
+                if ($(this).is(":checked") == true)
+                {
+                    $("button[name='btn-registrar']").show(1000);
+                }else{
+                    $("button[name='btn-registrar']").hide(1000);
+                }
+            });
+
+            function registrar(){
+                $("#termos").fadeOut(1000, function(){
+                    $("#formulario").show(1000);
+                });
+            }
+            $(".custom-file-input").on("change", function() {
+                var fileName = $(this).val().split("\\").pop();
+                $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+            });
+       </script>
+   </footer>
+</body>
+</html>
+

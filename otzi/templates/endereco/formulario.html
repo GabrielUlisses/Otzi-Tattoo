@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script>
+    <div class="container">
+        <div class="row">
+            <div class="col-2"></div>
+            <div class="col">
+                {% bootstrap_messages %}
+                <form method="POST" action="{% url 'formulario' %}"> 
+                    {% csrf_token %}
+                    {% bootstrap_form form %}
+                    <button class="btn btn-primary btn-block">Cadastrar</button>                       
+                </form>
+                <!--
+                    <input type="tel" name="telefone" id="telefone" pattern="\([0-9]{2}\)[\s][0-9]{4,5}-[0-9]{4}" />
+                    <script type="text/javascript">$("#telefone").mask("(00) 00009-0000");</script>
+                    -->
+            </div>
+            <div class="col-2">
+                <button class="btn btn-primary" id="busca_cep">busca cep</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $("#cep").mask("00000-000");
+        $("#numero").mask("0000");
+
+        $(".texto").change(function(){
+            $(this).val($(this).val().toUpperCase());
+        });
+        
+        $("#busca_cep").click(function(){
+            $.ajax({
+            method: "GET",
+            url: "https://viacep.com.br/ws/"+$("#cep").val()+"/json/",
+            beforeSend: function( xhr ) {
+               console.log('antes de enviar');
+            },
+            })
+            .done(function(dados) {
+                console.log(dados);
+                preencher_formulario(dados);
+                console.log('success');
+            })
+            .fail(function(error) {
+                console.log('error: ' + error);
+            })
+            .always(function() {
+                console.log('encerrando');
+            })
+        });
+
+        function preencher_formulario(data){
+            $("#cidade").val(data.localidade);
+            $("#estado").val(data.uf );
+            $("#bairro").val(data.bairro );
+            $("#rua").val(data.logradouro );
+            $("#numero").val(data.gia);
+            $("#complemento").val(data.complemento );
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% load static %}
+{% block content %}
+
+<style>
+    .content{
+        margin-top: 100px;
+        margin-bottom: 100px;
+    }
+    .texto{
+        font-family: "Times New Roman";
+    }
+    input[type='file'] {
+        display: none
+    }
+
+</style>
+<div class="container content">
+    <div class="row">
+        <div class="col">
+            {% if messages %}
+                {% bootstrap_messages %}
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col-2 d-none d-md-block"></div>
+        <div class="col">
+            <div class="card bg-dark p-2">
+                <div class="card-header bg-dark p-0">
+                    <h5 class="text-white card-title"><center>Adicionar Publicação</center></h5>
+                </div>
+                <div class="card-body bg-white">
+                    <form action="" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        {% for hidden_field in form.hidden_fields %}                       
+                            {{ hidden_field }}
+                        {% endfor %}
+
+                           {% bootstrap_form form exclude='midia' %}
+                                                      
+                           <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="midia" name="midia">
+                            <label class="custom-file-label" for="midia"><strong>Escolher Imagem</strong></label>
+                          </div>
+                            <br>
+                        <button type="submit" class="btn btn-dark btn-block"><strong><i class="fas fa-save"></i> Publicar</strong></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-2 d-none d-md-block"></div>
+        
+    </div>
+</div>
+
+{% bootstrap_javascript jquery='full' %}
+<script>
+    
+</script>
+{% endblock %}

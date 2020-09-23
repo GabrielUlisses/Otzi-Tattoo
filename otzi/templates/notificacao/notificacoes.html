@@ -1,0 +1,95 @@
+
+{% extends "base.html" %}
+
+{% load static %}
+{% load bootstrap4 %}
+
+{% block content %}
+<style>
+    body{
+        background-image: url('../../static/img/tatuador.jpg');
+        background-repeat: no-repeat;
+        background-size: 100%;
+        background-position: center;
+        background-position: fixed;
+    }
+    .title{
+        font-size: 20px;
+    }
+    .btn-notificacao:hover{
+        background-color:black;
+        color: white;
+    }
+    .fundo{
+        background-size: auto;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-image: url('../../static/img/baleia.jpg');
+    }
+    
+</style>
+<div class="container" id="corpo">
+    <div class="row">
+        <div class="col">
+
+            {% if enviadas %}
+                {% for n in enviadas %}
+                    {% include "../components/notificacao.html" %}
+                    {% include '../components/modal/modal-advertencia.html' %}
+                {% endfor %}
+            {% endif %}
+
+            {% if notificacoes %}
+                {% for n in notificacoes %}
+                    {% include "../components/notificacao.html" %}
+                    {% include '../components/modal/modal-advertencia.html' %}
+                {% endfor %}
+            {% else %}
+                <center><h3 class="mt-5 text-white">Sua caixa de notificações está vazia</h3></center>
+            {% endif %}             
+           
+            {% if recebidas %}
+                {% for n in recebidas %}
+                    {% include "../components/notificacao.html" %}
+                    {% include '../components/modal/modal-advertencia.html' %}
+                {% endfor %}
+            {% endif %}
+                        
+        </div>
+    </div>  
+</div>
+{% include "../components/to-top-button.html" %}
+{% bootstrap_javascript jquery="full"%}
+<script>
+
+    $("button.btn-notificacao").click(function(){
+        var id = $(this).attr("id");
+        $("#notificacao-"+id).toggle();
+        if ($("#status-lido-"+id).text() == " Não lida"){
+            set_lido({{user.id}}, id);           
+            $("#status-lido-"+id).fadeOut(1500);   
+            $("#btn-remover-"+id).show(1500);        
+        }
+    });
+
+    //----- AJAX REQ'S -----//
+    function set_lido(user_id, not_id){
+        $.ajax({
+        method: "GET",
+        url: "http://127.0.0.1:8000/notificacao/notificacao/set_lida/"+user_id+"/"+not_id+"/?format=json",
+        beforeSend: function( xhr ) {
+        },
+        })
+        .done(function(dados) {
+            console.log(dados);
+            $("#status-lido-"+id).hide();
+        })
+        .fail(function(error) {
+            console.log('error: ' + error);
+        })
+        .always(function() {
+        })
+    }
+</script>
+{% endblock %}
+    

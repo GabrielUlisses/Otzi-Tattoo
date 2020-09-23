@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-3 d-none d-md-block"></div>
+            <div class="col">
+                {% bootstrap_messages %}
+                <div class="card">
+                    <div class="card-body">
+                        <form method="POST" action="{% url 'editar_configuracao' %}" >
+                            {% csrf_token %}
+                            <input type="hidden" name="dia" value="{{configuracao.dia}}">
+                            <input type="hidden" name="configuracao_agenda_id" value="{{configuracao.id}}">
+                            {% bootstrap_form form %}
+                            <button type="submit" class="btn btn-dark btn-block" >
+                                <i class="fas fa-save"></i> Gravar Alterações 
+                            </button>                           
+                        </form>
+                        <button type="submit" class="btn btn-danger btn-block mt-2" data-toggle="modal" data-target="#modal-excluir-configuracao">
+                            <i class="fas fa-trash"></i> Remover Configuração 
+                        </button>
+                    </div>
+                </div>                               
+            </div>
+            <div class="col-3 d-none d-md-block"></div>
+        </div>
+    </div>
+    <!-- EXCLUIR CONFIGURAÇÃO -->
+    <div class="modal fade" id="modal-excluir-configuracao" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalScrollableTitle">Deseja realmente remover esta Configuração?</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Cancelar">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              Uma configuração removida não poderá ser recuperada.
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+              <form method="POST" action="{% url 'remover_configuracao_agenda' %}">
+                {% csrf_token %}
+                <input type="hidden" name="configuracao_agenda_id" value="{{configuracao.id}}">
+                <button class="btn btn-danger text-white float-right" type="submit"><i class="fas fa-trash-alt"></i>Sim Remover</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+      
+    <script>
+      $(document).ready(function(){
+        $('[data-toggle="popover"]').popover();   
+      });
+    </script>
+{% endblock %}
+    

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% load bootstrap4 %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    .img-card{
+        margin: 4px;
+        box-shadow: 4px 4px 6px black;
+        transition: 0.6s;
+    }
+    .img-card:hover{
+        width: 300px;
+        height: 300px;
+        /*opacity: 95%;*/
+        transform: scale(1.04);
+        transition: 0.6s;
+    }
+
+    figcaption{
+        margin-top: -30px;
+        opacity: 76%;
+    }
+    .aprovacao-text{
+        color: crimson;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="card-columns">
+                
+                {% if imgs %}
+                    {% for img in imgs %}       
+                        <img class="img thumbnail rounded img-card" src='{{img.midia.thumbnail.url}}' width="300" height="300">                   
+                    {% endfor %}
+                {% else %}
+                    <div class="card bg-dark text-light">
+                        <div class="card-body">
+                            <strong>Não há imagens disponíveis para a galeria.</strong>
+                        </div>
+                    </div>
+                {% endif %}
+                    
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "../components/to-top-button.html" %}
+
+<script>
+
+</script>
+{% endblock %}

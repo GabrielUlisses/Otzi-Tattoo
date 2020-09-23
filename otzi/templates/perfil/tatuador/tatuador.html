@@ -1,0 +1,643 @@
+{% extends "base.html" %}
+
+{% load bootstrap4 %}
+{% load static %}
+
+{% block content %}
+
+<style>
+  .item-card{
+		width: 95%;
+		height: 75px;
+		box-shadow: 5px 5px 8px black;
+		border-radius: 6px;
+    border-left: solid 4px;
+    background-color: white;
+    margin: 12px;
+    
+	}
+	.text{
+		margin-left: 10px;
+		margin-top: 0px;
+	}
+	.hr{
+		width: 100%;
+		margin: 0px;
+    background-color: #545557;
+		border-width: 2px;
+	}
+  .item-card-dark{
+		width: 95%;
+		height: 70px;
+		box-shadow: 5px 5px 8px black;
+		border-radius: 4px;
+    border-left: solid 4px grey;
+    margin: 12px;
+	}
+  p .text-studio{    
+    margin-left: 4px;
+  }
+  hr.text-studio{
+    background-color: grey;
+  }
+
+  .btn-card{		
+		width: 100px;
+		height: 80px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 6px;		
+		background-repeat: no-repeat;
+		background-position: center;
+		box-shadow: 4px 4px 6px black;
+		margin: 5px;
+	}
+	.btn-card:hover{
+		margin-top: 0px;
+		width: 110px;
+		height: 90px;
+		
+		transition: 0.4s;
+	}
+	.item-card-text{
+		
+		margin-left: auto;
+		margin-right: auto;
+	}
+	.btn-card-caveira{
+		background-color: black;
+		background-image: url("{% static 'icons/caveira-icon.png' %}");
+		background-size: 60%;
+	}
+	.btn-card-agenda{
+		background-color: black;
+		background-image: url("{% static 'icons/agenda-icon.png' %}");
+		background-size: 60%;
+	}
+	.btn-card-studio{
+		background-color: grey;
+		background-image: url("{% static 'icons/address-icon.png' %}");
+		background-size: 60%;
+	}
+	.btn-card-bio{
+		background-color: black;
+		background-image: url("{% static 'icons/book-icon.png' %}");
+		background-size: 60%;
+	}
+	.btn-card-publicacoes{
+		background-color: grey;
+		background-image: url("{% static 'icons/pub-icon.png' %}");
+		background-size: 60%;
+	}
+	.btn-card-label{
+		display: inline;
+		padding: 1px 6px 1px 6px;
+		border-radius: 6px;
+		float: right;
+		margin-top: -15px;
+		margin-right: -5px;
+		box-shadow: 1px 1px 3px black;
+	}
+  .none{
+    display: none;
+  }
+</style>
+
+<div class="container">
+  <div class="row">
+    <div class="col-2 d-none d-md-block"></div>
+    <div class="col">
+      <div class="d-flex">
+        <div>
+          <div class="btn-card btn-card-caveira" onclick="tatuadorContent()"></div>
+          <div class="bg-dark btn-card-label">
+            <span class="text-white"><strong>Tatuador</strong></span>
+          </div>
+        </div>						
+        <div>
+          <div class="btn-card btn-card-studio" onclick="studioContent()"></div>
+          <div class="bg-dark btn-card-label">
+            <span class="text-white"><strong>Stúdio</strong></span>
+          </div>
+        </div>
+        <div>
+          <div class="btn-card btn-card-agenda" onclick="agendaContent()"></div>
+          <div class="bg-dark btn-card-label">
+            <span class="text-white"><strong>Atendimento</strong></span>
+          </div>
+        </div>
+        <div>
+          <div class="btn-card btn-card-publicacoes" onclick="publicacoesContent()"></div>
+          <div class="bg-dark btn-card-label">
+            <span class="text-white"><strong>publicações</strong></span>
+          </div>
+        </div>
+        <div>
+          <div class="btn-card btn-card-bio" onclick="bioContent()"></div>
+          <div class="bg-dark btn-card-label">
+            <span class="text-white"><strong>Biografia</strong></span>
+          </div>
+        </div>
+        <div>
+          <div class="btn-card" onclick="certificadoContent()" style="background-color: grey;"> 
+            <strong><i class="fas fa-certificate" style="font-size: 28px;"></i></strong> 
+          </div>         
+          <div class="bg-dark btn-card-label">
+            <span class="text-white"><strong>Certificados</strong></span>
+          </div>
+        </div>
+      </div>	
+    </div>
+    <div class="col-2 d-none d-md-block"></div>
+  </div>
+</div>
+
+<!--  STUDIO  -->
+<div id="studio" class="container none" style="margin-top: 60px;">
+  <div class="row">
+      <div class="col-2 d-none d-md-block">
+      </div>
+      <div class="col">
+        <div class="card bg-dark">
+          <div class="card-body text-light">
+            <p class="text-studio"><span><strong>CEP:</strong> {{usuario.tatuador.endereco.cep}} </span></p>
+            <hr class="text-studio">
+            <p class="text-studio"><span><strong>Cidade:</strong> {{usuario.tatuador.endereco.cidade}} - {{usuario.tatuador.endereco.estado}}</span></p>
+            <hr class="text-studio">
+            <p class="text-studio"><span><strong>Bairro:</strong> {{usuario.tatuador.endereco.bairro}}</span></p>
+            <hr class="text-studio">
+            <p class="text-studio"><span><strong>Rua:</strong> {{usuario.tatuador.endereco.rua}} - {{usuario.tatuador.endereco.numero}}</span></p>            
+            {% if usuario.tatuador.endereco.complemento %}
+              <hr class="text-studio">
+              <p class="text-studio"><span><strong>Complemento:</strong> {{usuario.tatuador.endereco.complemento}}</span></p>
+            {% endif %}         
+          </div>
+        </div>
+      </div>
+      <div class="col-2 d-none d-md-block">
+      </div>
+  </div>
+</div>
+
+<!--  CERTIFICADOS  -->
+<div id="certificados" class="container none" style="margin-top: 60px;">
+  <div class="row">
+      <div class="col-2 d-none d-md-block">
+      </div>
+      <div class="col">
+        
+        {% for certificado in certificados %}
+        <div class="card bg-dark m-2">                                                                              
+          <div class="card-body">
+            <h5>
+              <span class="text-left text-light"><strong>{{certificado.titulo}}</strong></span> 
+              <span class="float-right  small text-muted">{{certificado.data}}</span>
+            </h5>
+            <br>
+            <p class="text-light">{{certificado.descricao}}</p>                                                                  
+          </div>
+        </div>
+        {% endfor %}
+
+      </div>
+      <div class="col-2 d-none d-md-block">
+      </div>
+  </div>
+</div>
+
+<!--  BIO  -->
+<div id="bio" class="container none" style="margin-top: 60px;">
+  <div class="row">
+    <div class="col-2 d-none d-md-block"></div>
+    <div class="col">
+      <div class="card bg-dark">
+        <div class="card-body">
+          {% if usuario.tatuador.bio %}
+            <div>
+              <p class="text-light" style="font-size: 18px;">{{usuario.tatuador.bio.apresentacao}}</p>
+            </div>
+            <div>
+              <p class="text-light">{{usuario.tatuador.bio.conteudo}}</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="col-2 d-none d-md-block"></div>
+  </div>
+</div>
+
+<!--  DADOS TATUADOR  -->
+<div id="tatuador" class="container" style="margin-top: 60px;">
+  <div class="row">
+    <div class="col-2 d-nome d-md-block"></div>
+    <div class="col">
+      <div class="card bg-dark">
+        <div class="card-body">
+          <div class="media">
+                        
+            <img class="img rounded-circle mt-0" {% if usuario.imagem %} src="  {{usuario.imagem.thumbnail.url}}"{% else %} src="{% static 'img/user.png' %}" {% endif %} width="70" height="70">
+                
+            <div class="media-body text-light">
+              <h5 class="mt-3 ml-3"><strong>{{usuario.nome}} - {{usuario.usuario.username}}</strong></h5>
+              <div class="d-none d-md-block">
+                <div class="btn-group float-right">
+                  <button class='btn btn-secondary btn-sm btn-orcamento' onclick='gerarPedidoOrcamento({{usuario.tatuador.id}})'> <strong> Pedido de Orçamento </strong> </button>
+                  <button class="btn btn-secondary btn-sm" onclick="connect('{{usuario.usuario.username}}',{{usuario.usuario.id}})"><strong><i class="fas fa-comment-dots"></i> Mensagem</strong></button>   
+                </div>  
+              </div>       
+              <div class="d-block d-md-none">
+                <div class="dropdown dropleft float-right">
+                    <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      <button class='btn btn-secondary btn-sm btn-orcamento' onclick='gerarPedidoOrcamento({{usuario.tatuador.id}})'> <strong> Pedido de Orçamento </strong> </button>
+                        <button class="dropdown-item" onclick="connect('{{usuario.usuario.username}}',{{usuario.usuario.id}})"><strong><i class="fas fa-comment-dots"></i> Mensagem</strong></button>                        
+                    </div>
+                </div>
+            </div>  
+            </div>
+        </div>
+        </div>
+      </div>
+      <br>
+      <div class="item-card-dark bg-dark ">	
+        <span class="text text-light" style="font-size: 18px;"><strong> <i class="fas fa-user"></i> Tatuador:</strong></span>
+        <hr class="hr bg-secondary">
+        <span class="text text-light" style="font-size: 20px;">{{usuario.nome}}</span>
+      </div>
+      <div class="item-card-dark bg-dark">	
+        <span class="text text-light" style="font-size: 18px;"><strong> <i class="fas fa-envelope"></i> E-mail:</strong></span>
+        <hr class="hr bg-secondary">
+        <span class="text text-light" style="font-size: 20px;">{{usuario.usuario.email}}</span>
+      </div>
+      <div class="item-card-dark bg-dark">	
+        <span class="text text-light" style="font-size: 18px;"><strong> <i class="fas fa-phone"></i> Telefone:</strong></span>
+        <hr class="hr bg-secondary">
+        <span class="text text-light" style="font-size: 20px;">{{usuario.tatuador.telefone}}</span>
+      </div>
+      <div class="item-card-dark bg-dark">	
+        <span class="text text-light" style="font-size: 18px;"><strong> <i class="fab fa-facebook-square"></i> Facebook:</strong></span>
+        <hr class="hr bg-secondary">
+        <span class="text text-light" style="font-size: 20px;">{{usuario.tatuador.facebook}}</span>
+      </div>
+      <div class="item-card-dark bg-dark">	
+        <span class="text text-light" style="font-size: 18px;"><strong> <i class="fab fa-whatsapp-square"></i> Wathsapp:</strong></span>
+        <hr class="hr bg-secondary">
+        <span class="text text-light" style="font-size: 20px;">{{usuario.tatuador.wathsapp}}</span>
+      </div>
+      <div class="item-card-dark bg-dark">	
+        <span class="text text-light" style="font-size: 18px;"><strong> <i class="fab fa-instagram"></i> Instagram:</strong></span>
+        <hr class="hr bg-secondary">
+        <span class="text text-light" style="font-size: 20px;">{{usuario.tatuador.instagram}}</span>
+      </div>      
+      {% if usuario.tatuador.site_pessoal %}
+      <div class="item-card-dark bg-dark">	
+        <span class="text text-light" style="font-size: 18px;"><strong> <i class="fas fa-globe"></i> Site Pessoal:</strong></span>
+        <hr class="hr bg-secondary">
+        <span class="text text-light" style="font-size: 20px;"> {{usuario.tatuador.site_pessoal}} </span>
+      </div>
+      {% endif %}
+    
+    
+    
+    </div>
+    <div class="col-2 d-nome d-md-block"></div>
+  </div>
+</div>
+
+<!--  AGENDA  -->
+<div  id="agenda" class="container none" style="margin-top: 60px;">
+    <div class="row">
+        <div class="col-2"></div>
+        <div class="col">
+            <div class="card-columns">
+                <!--    SEGUNDA    -->               
+                {% if configuracao_agenda.segunda %}
+                  <div class="card bg-dark" title="Horário de Almoço" data-toggle="popover" data-trigger="hover" data-content="De {{configuracao_agenda.segunda.horario_inicio_almoco}} até {{configuracao_agenda.segunda.horario_termino_almoco}}">                                     
+                      <div class="card-body bg-dark rounded">
+                          <p class="text-white text-center "><strong>Segunda</strong></p> 
+                          <p class="text-white text-center"><strong><span>Das </span>{{configuracao_agenda.segunda.horario_inicio}} <span>Até </span>{{configuracao_agenda.segunda.horario_termino}}</strong></p>                                                                                                              
+                      </div>
+                  </div>
+                {% else %}
+                  <div class="card bg-dark">                               
+                    <div class="card-body bg-dark rounded">      
+                      <p class="text-white text-center"><strong>Segunda</strong></p>      
+                      <p class="text-white text-center"><strong>Não definida</strong></p>                                    
+                    </div>
+                  </div>
+                {% endif %}
+                
+                <!--    TERÇA    -->               
+                {% if configuracao_agenda.terca %}
+                  <div class="card bg-dark" title="Horário de Almoço" data-toggle="popover" data-trigger="hover" data-content="De {{configuracao_agenda.terca.horario_inicio_almoco}} até {{configuracao_agenda.terca.horario_termino_almoco}}">                                     
+                      <div class="card-body bg-dark rounded">
+                          <p class="text-white text-center "><strong>Terça</strong></p> 
+                          <p class="text-white text-center"><strong><span>Das </span>{{configuracao_agenda.terca.horario_inicio}} <span>Até </span>{{configuracao_agenda.terca.horario_termino}}</strong></p>                                                                                                        
+                      </div>
+                  </div>
+                {% else %}
+                  <div class="card bg-dark">                               
+                    <div class="card-body bg-dark rounded">      
+                      <p class="text-white text-center"><strong>Terça</strong></p>      
+                      <p class="text-white text-center"><strong>Não definida</strong></p>                                         
+                    </div>
+                  </div>
+                {% endif %}
+
+                <!--    QUARTA    -->               
+                {% if configuracao_agenda.quarta %}
+                  <div class="card bg-dark" title="Horário de Almoço" data-toggle="popover" data-trigger="hover" data-content="De {{configuracao_agenda.quarta.horario_inicio_almoco}} até {{configuracao_agenda.quarta.horario_termino_almoco}}">                                     
+                      <div class="card-body bg-dark rounded">
+                          <p class="text-white text-center "><strong>Quarta</strong></p> 
+                          <p class="text-white text-center"><strong><span>Das </span>{{configuracao_agenda.quarta.horario_inicio}} <span>Até </span>{{configuracao_agenda.quarta.horario_termino}}</strong></p>                                                                                                            
+                      </div>
+                  </div>
+                {% else %}
+                  <div class="card bg-dark">                               
+                    <div class="card-body bg-dark rounded">      
+                      <p class="text-white text-center"><strong>Quarta</strong></p>      
+                      <p class="text-white text-center"><strong>Não definida</strong></p>                                          
+                    </div>
+                  </div>
+                {% endif %}
+
+                <!--    QUINTA    -->               
+                {% if configuracao_agenda.quinta %}
+                  <div class="card bg-dark" title="Horário de Almoço" data-toggle="popover" data-trigger="hover" data-content="De {{configuracao_agenda.quinta.horario_inicio_almoco}} até {{configuracao_agenda.quinta.horario_termino_almoco}}">                                     
+                      <div class="card-body bg-dark rounded">
+                          <p class="text-white text-center "><strong>Quinta</strong></p> 
+                          <p class="text-white text-center"><strong><span>Das </span>{{configuracao_agenda.quinta.horario_inicio}} <span>Até </span>{{configuracao_agenda.quinta.horario_termino}}</strong></p>                                                                                                             
+                      </div>
+                  </div>
+                {% else %}
+                  <div class="card bg-dark">                               
+                    <div class="card-body bg-dark rounded">      
+                      <p class="text-white text-center"><strong>Quinta</strong></p>      
+                      <p class="text-white text-center"><strong>Não definida</strong></p>                                         
+                    </div>
+                  </div>
+                {% endif %}
+
+                <!--    SEXTA    -->               
+                {% if configuracao_agenda.sexta %}
+                  <div class="card bg-dark" title="Horário de Almoço" data-toggle="popover" data-trigger="hover" data-content="De {{configuracao_agenda.sexta.horario_inicio_almoco}} até {{configuracao_agenda.sexta.horario_termino_almoco}}">                                     
+                      <div class="card-body bg-dark rounded">
+                          <p class="text-white text-center "><strong>Sexta</strong></p> 
+                          <p class="text-white text-center"><strong><span>Das </span>{{configuracao_agenda.sexta.horario_inicio}} <span>Até </span>{{configuracao_agenda.sexta.horario_termino}}</strong></p>                                                                                                              
+                      </div>
+                  </div>
+                {% else %}
+                  <div class="card bg-dark">                               
+                    <div class="card-body bg-dark rounded">      
+                      <p class="text-white text-center"><strong>Sexta</strong></p>      
+                      <p class="text-white text-center"><strong>Não definida</strong></p>                                        
+                    </div>
+                  </div>
+                {% endif %}
+
+                <!--    SÁBADO    -->               
+                {% if configuracao_agenda.sabado %}
+                  <div class="card bg-dark" title="Horário de Almoço" data-toggle="popover" data-trigger="hover" data-content="De {{configuracao_agenda.sabado.horario_inicio_almoco}} até {{configuracao_agenda.sabado.horario_termino_almoco}}">                                     
+                      <div class="card-body bg-dark rounded">
+                          <p class="text-white text-center "><strong>Sábado</strong></p> 
+                          <p class="text-white text-center"><strong><span>Das </span>{{configuracao_agenda.sabado.horario_inicio}} <span>Até </span>{{configuracao_agenda.sabado.horario_termino}}</strong></p>                                                                                                             
+                      </div>
+                  </div>
+                {% else %}
+                  <div class="card bg-dark">                               
+                    <div class="card-body bg-dark rounded">      
+                      <p class="text-white text-center"><strong>Sábado</strong></p>      
+                      <p class="text-white text-center"><strong>Não definida</strong></p>                      
+                    </div>
+                  </div>
+                {% endif %}
+
+                <!--    DOMINGO    -->               
+                {% if configuracao_agenda.domingo %}
+                  <div class="card bg-dark" title="Horário de Almoço" data-toggle="popover" data-trigger="hover" data-content="De {{configuracao_agenda.domingo.horario_inicio_almoco}} até {{configuracao_agenda.domingo.horario_termino_almoco}}">                                     
+                      <div class="card-body bg-dark rounded">
+                          <p class="text-white text-center "><strong>Domingo</strong></p> 
+                          <p class="text-white text-center"><strong><span>Das </span>{{configuracao_agenda.domingo.horario_inicio}} <span>Até </span>{{configuracao_agenda.domingo.horario_termino}}</strong></p>                                                                                                           
+                      </div>
+                  </div>
+                {% else %}
+                  <div class="card bg-dark">                               
+                    <div class="card-body bg-dark rounded">      
+                      <p class="text-white text-center"><strong>Domingo</strong></p>      
+                      <p class="text-white text-center"><strong>Não definida</strong></p>                                           
+                    </div>
+                  </div>
+                {% endif %}
+
+                <!--    FERIADO RELIGIOSO    -->               
+                {% if configuracao_agenda.feriado_religioso %}
+                  <div class="card bg-dark" title="Horário de Almoço" data-toggle="popover" data-trigger="hover" data-content="De {{configuracao_agenda.feriado_religioso.horario_inicio_almoco}} até {{configuracao_agenda.feriado_religioso.horario_termino_almoco}}">                                     
+                      <div class="card-body bg-dark rounded">
+                          <p class="text-white text-center "><strong>Feriado Religioso</strong></p> 
+                          <p class="text-white text-center"><strong><span>Das </span>{{configuracao_agenda.feriado_religioso.horario_inicio}} <span>Até </span>{{configuracao_agenda.feriado_religioso.horario_termino}}</strong></p>                                                                                                           
+                      </div>
+                  </div>
+                {% else %}
+                  <div class="card bg-dark">                               
+                    <div class="card-body bg-dark rounded">      
+                      <p class="text-white text-center"><strong>Feriado Religioso</strong></p>      
+                      <p class="text-white text-center"><strong>Não definida</strong></p>                                         
+                    </div>
+                  </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-2"></div>
+    </div>
+</div>
+
+<!--  PUBLICACOES  -->
+<div id="publicacoes" class="container none" style="margin-top: 60px;">
+    <div class="row">
+        <div class="col d-flex justify-content-center">
+          
+            {% if publicacoes %}
+                <div class="card-group">
+                    {% for p in publicacoes %}
+                        {% include "../../components/publicacao_card.html" %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <center><p><h5><strong class="text-light">Nenhuma publicação para exibir</strong></h5></p></center>
+            {% endif %}
+              
+        </div>       
+    </div>
+</div>
+
+<!--  MODAL ORCAMENTO  -->
+<div class="container" id="container-modal-orcamento">
+
+  <!-- The Modal -->
+  <div class="modal fade" id="modalOrcamento">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="text-muted text-center mt-4 mb-4"> PEDIDO DE ORÇAMENTO </h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">       
+          <form method="POST" action="{% url 'gerar_pedido_orcamento' %}" enctype="multipart/form-data" name="pedido_orcamento_form">
+              {% csrf_token %}
+              {% bootstrap_form pedido_orcamento_form exclude='img_1, img_2, img_3,tatuadores' %}                                                       
+                               
+              <p><span class="text-secondary" style="font-size: 16px;"><strong> 
+                Você pode escolher até três imagens que ajudem o tatuador a compreender o que você deseja, 
+                podendo ser a imagem de uma tatuagem ou de uma arte que sirva de inspiração.
+              </strong></span></p>
+
+              <div class="row">
+                <div class="col">
+                  {% bootstrap_field pedido_orcamento_form.img_1 %}
+                </div>
+                <div class="col"> 
+                  <img id="img_1" style="display:none;">
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col">
+                  {% bootstrap_field pedido_orcamento_form.img_2 %}
+                </div>
+                <div class="col"> 
+                  <img id="img_2" style="display:none;">
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col">
+                  {% bootstrap_field pedido_orcamento_form.img_3 %}
+                </div>
+                <div class="col"> 
+                  <img id="img_3" style="display:none;">
+                </div>
+              </div>
+              <button type="submit" class="btn btn-dark btn-block"> 
+                  <strong>Enviar Pedido</strong>
+                  <strong class="bg-success pl-2 pr-2 rounded float-right" onclick="submit()"><i class="fa fa-arrow-right"></i></strong>
+              </button>           
+            </form>
+        </div>  
+                                 
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% include "../../components/to-top-button.html" %}
+
+<script>
+                            
+    function connect(user,id){
+        param = id > {{request.user.id}} ? id + "_" + {{request.user.id}} : {{request.user.id}} + "_" + id;
+        window.location.pathname = '/chat/' + param + '/';
+    } 
+  // ---------- CONTROLE DE CONTEÚDO ---------- //
+  function tatuadorContent(){
+    clear();
+    $("#tatuador").show(500);
+  }
+  function bioContent(){
+    clear();
+    $("#bio").show(500);
+  }
+  function agendaContent(){
+    clear();
+    $("#agenda").show(500);
+  }
+  function publicacoesContent(){
+    clear();
+    $("#publicacoes").show(500);
+  }
+  function studioContent(){
+    clear();
+    $("#studio").show(500);
+  }
+  function certificadoContent(){
+    clear();
+    $("#certificados").show(500);
+  }
+
+  function clear(){
+    $("#tatuador").hide(500);
+    $("#studio").hide(500);
+    $("#bio").hide(500);
+    $("#publicacoes").hide(500);
+    $("#agenda").hide(500);
+    $("#certificados").hide(500);
+  }
+        
+  // ---------- DISPLAY DE IMAGENS DE FORMULÁRIO ---------- //
+  $("#id_img_1").change(function(){
+    if (this.files && this.files[0]) {
+      var file = new FileReader();
+      file.onload = function(e) {                
+        $("#img_1").attr({
+          "src": e.target.result,
+          "width": 70,
+          "height": 70,
+          "class": "img rounded"
+        }).css({
+          "display":"block"
+        });
+      };       
+      file.readAsDataURL(this.files[0]);
+    }
+  });
+
+  $("#id_img_2").change(function(){
+    if (this.files && this.files[0]) {
+      var file = new FileReader();
+      file.onload = function(e) {                
+        $("#img_2").attr({
+          "src": e.target.result,
+          "width": 70,
+          "height": 70,
+          "class": "img rounded"
+        }).css({
+          "display":"block"
+        });
+      };       
+      file.readAsDataURL(this.files[0]);
+    }
+  });
+
+  $("#id_img_3").change(function(){
+    if (this.files && this.files[0]) {
+      var file = new FileReader();
+      file.onload = function(e) {                
+        $("#img_3").attr({
+          "src": e.target.result,
+          "width": 70,
+          "height": 70,
+          "class": "img rounded"
+        }).css({
+          "display":"block"
+        });
+      };       
+      file.readAsDataURL(this.files[0]);
+    }
+  });
+
+    // ---------- PEDIDO ORÇAMENTO MODAL CONTROLL ----------- //
+    function gerarPedidoOrcamento(id){
+        $("#usuario_id").val(id);
+        $("#modalOrcamento").modal();
+    }
+
+</script>
+{% endblock %}

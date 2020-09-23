@@ -1,0 +1,749 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load bootstrap4 %}
+
+{% block content %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script>
+
+<style>
+    .texto{
+        font-family: "Times New Roman";
+    }
+    input[type='file'] {
+        display: none
+    }
+    .nav-link{
+      border-color: white;
+      margin-left: 1px;
+    }
+    
+</style>
+
+<div class="container-fluid content" id="user-content">
+    <div class="row">
+        <div class="col-2 d-none d-md-block" ></div>
+        <div class="col">
+          {% bootstrap_messages messages %}
+            <!--<center><img class="img-fluid img-thumbnail rounded-circle" src={{usuario.imagem.thumbnail.url}} width="200" height="200"></center>-->
+            
+            <div class="card">
+                <div class="card-body">
+                    <a class="btn btn-dark btn-sm text-white" href="{% url 'carregar_pagina_perfil' %}"><strong> <i class="fas fa-arrow-alt-circle-left"></i> voltar</strong></a>
+                    <br>
+                    <br>
+                    
+                    <div class="d-none d-md-block">
+                      <ul class="nav nav-tabs" id="myTab" role="tablist">
+
+                        <!-- // -------- PERFIL ---------- // -->
+                        <li class="nav-item" role="presentation">
+                          <a class="nav-link active bg-dark text-white" id="dados-perfil-tab" data-toggle="tab" href="#dados-perfil" role="tab" aria-controls="dados-perfil" aria-selected="true"><strong><i class="fas fa-user"></i> Principal</strong></a>
+                        </li>
+
+                        <!-- // -------- STUDIO ---------- // -->
+                        <li class="nav-item" role="presentation">
+                          <a class="nav-link bg-dark text-white" id="studio-tab" data-toggle="tab" href="#studio" role="tab" aria-controls="studio" aria-selected="false"><strong> <i class="fas fa-map-marker-alt"></i> Stúdio</strong></a>
+                        </li>
+
+                        <!-- // -------- CERTIFICADOS ---------- // -->
+                        <li class="nav-item" role="presentation">
+                          <a class="nav-link bg-dark text-white" id="certificado-tab" data-toggle="tab" href="#certificado" role="tab" aria-controls="certificado" aria-selected="false"><strong><i class="fas fa-file-alt"></i> Certificados</strong></a>
+                        </li>
+                        
+                        <!-- // -------- BIO ---------- // -->
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link bg-dark text-white" id="bio-tab" data-toggle="tab" href="#bio" role="tab" aria-controls="bio" aria-selected="false"><strong><i class="fas fa-book"></i> Bio</strong></a>
+                        </li>
+
+                        <!-- // -------- AGENDA ---------- // -->
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link bg-dark text-white" id="agenda-trabalho-tab" data-toggle="tab" href="#agenda-trabalho" role="tab" aria-controls="agenda-trabalho" aria-selected="false"><strong> <i class="fas fa-calendar-check"></i> Agenda</strong></a>
+                        </li>
+
+                    </ul>
+                    </div>
+                    
+                    <div class="d-block d-md-none">
+                      <div class="dropdown dropright float-left">
+                          <button class="btn btn-dark btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <i class="fas fa-cog"></i> <strong>Opções</strong>
+                          </button>
+                          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <ul class="nav nav-pills" role="tablist">
+                              <!-- // -------- PERFIL ---------- // -->
+                        <li class=" nav-item btn-dark w-100" role="presentation">
+                          <a class="nav-link active bg-dark text-white" id="dados-perfil-tab" data-toggle="tab" href="#dados-perfil" role="tab" aria-controls="dados-perfil" aria-selected="true"><strong><i class="fas fa-user"></i> Principal</strong></a>
+                        </li>
+
+                        <!-- // -------- STUDIO ---------- // -->
+                        <li class=" nav-item btn-dark w-100" role="presentation">
+                          <a class="nav-link bg-dark text-white" id="studio-tab" data-toggle="tab" href="#studio" role="tab" aria-controls="studio" aria-selected="false"><strong> <i class="fas fa-map-marker-alt"></i> Stúdio</strong></a>
+                        </li>
+
+                        <!-- // -------- CERTIFICADOS ---------- // -->
+                        <li class=" nav-item btn-dark w-100" role="presentation">
+                          <a class="nav-link bg-dark text-white" id="certificado-tab" data-toggle="tab" href="#certificado" role="tab" aria-controls="certificado" aria-selected="false"><strong><i class="fas fa-file-alt"></i> Certificados</strong></a>
+                        </li>
+                        
+                        <!-- // -------- BIO ---------- // -->
+                        <li class=" nav-item btn-dark w-100" role="presentation">
+                            <a class="nav-link bg-dark text-white" id="bio-tab" data-toggle="tab" href="#bio" role="tab" aria-controls="bio" aria-selected="false"><strong><i class="fas fa-book"></i> Bio</strong></a>
+                        </li>
+
+                        <!-- // -------- AGENDA ---------- // -->
+                        <li class=" nav-item btn-dark w-100" role="presentation">
+                            <a class="nav-link bg-dark text-white" id="agenda-trabalho-tab" data-toggle="tab" href="#agenda-trabalho" role="tab" aria-controls="agenda-trabalho" aria-selected="false"><strong> <i class="fas fa-calendar-check"></i> Agenda</strong></a>
+                        </li>
+                          </ul>
+                          </div>
+                      </div>
+                    <br>
+                    </div>
+                    <br>
+                    <div class="tab-content" id="myTabContent">
+
+                        <!-- // -------- PERFIL ---------- // -->
+                        <div class="tab-pane fade show active" id="dados-perfil" role="tabpanel" aria-labelledby="dados-perfil-tab">                                             
+                          <div class="card" id="tatuador-data">                            
+                            <div class="card-body p-1">    
+                              <p class="float-right m-2"> Deseja alterar alguma informação? <a class="btn btn-dark text-white btn-sm" id="btn-tatuador-form-edit" ><strong> <i class="fas fa-edit"></i> Alterar</strong> </a></p>                         
+                              <table class="table table-hover table-striped">
+                                  <thead></thead>
+                                  <tbody>
+                                    <tr>
+                                      <td><strong>Nome</strong></td>
+                                      <td>{{usuario.nome}}</td>
+                                    </tr>
+                                    {% if usuario.tatuador.telefone %}
+                                    <tr>
+                                      <td><strong>Telefone</strong></td>
+                                      <td>{{usuario.tatuador.telefone}}</td>
+                                    </tr>
+                                    {% endif%}
+                                    {% if usuario.tatuador.wathsapp %}
+                                    <tr>
+                                      <td><strong>WathsApp</strong></td>
+                                      <td>{{usuario.tatuador.wathsapp}}</td>
+                                    </tr>
+                                    {% endif%}
+                                    {% if usuario.tatuador.instagram %}
+                                    <tr>
+                                      <td><strong>Instagram</strong></td>
+                                      <td>{{usuario.tatuador.instagram}}</td>
+                                    </tr>
+                                    {% endif%}
+                                    {% if usuario.tatuador.facebook %}
+                                    <tr>
+                                      <td><strong>Facebook</strong></td>
+                                      <td>{{usuario.tatuador.facebook}}</td>
+                                    </tr>
+                                    {% endif%}
+                                    {% if usuario.tatuador.site_pessoal %}
+                                    <tr>
+                                      <td><strong>Site Pessoal</strong></td>
+                                      <td>{{usuario.tatuador.site_pessoal}}</td>
+                                    </tr>
+                                    {% endif%}
+                                  </tbody>
+                              </table>                               
+                            </div>
+                          </div>
+
+                          <div class="card" id="tatuador-form" style="display:none;">
+                            <div class="card-body">
+                              
+                              <button class="btn btn-danger btn-sm float-right m-2" id="btn-tatuador-form-close"><strong><i class="fas fa-times"></i> Fechar</strong></button>
+                              <form method="POST" action="{% url 'editar_dados_perfil_tatuador' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="tatuador_id" value="{{usuario.tatuador.id}}">
+                                {% bootstrap_form tatuador_form %}                               
+                                <button class="btn btn-dark btn-block" ><strong><i class="fas fa-save"></i> Salvar Alterações</strong></button>                                                             
+                              </form>
+                              <button class="btn btn-danger btn-block mt-2" onclick="modalBloq()"><strong><i class="fas fa-trash-alt"></i> Remover Perfil</strong></button>
+                            </div>
+                          </div>
+                          
+                        </div>
+                        <!-- // -------- STUDIO ---------- // -->
+                        <div class="tab-pane fade " id="studio" role="tabpanel" aria-labelledby="studio-tab">
+                          <div class="card" id="studio-content">
+                              <div class="card-body p-0">
+                                <p class="float-right m-2" > Deseja alterar alguma informação? <button class="btn btn-dark text-white btn-sm" id="btn-studio-form"><strong> <i class="fas fa-edit"></i> Alterar</strong> </a></button> 
+                                <table class="table table-hover table-striped">
+                                  <thead></thead>
+                                  <tbody>
+                                      <tr>
+                                          <td>CEP</td>
+                                          <td>{{studio.cep}}</td>
+                                      </tr>
+                                      <tr>
+                                          <td>Estado</td>
+                                          <td>{{studio.estado}}</td>
+                                      </tr>
+                                      <tr>
+                                          <td>Cidade</td>
+                                          <td>{{studio.cidade}}</td>
+                                      </tr>
+                                      <tr>
+                                          <td>Rua</td>
+                                          <td>{{studio.rua | title }}</td>
+                                      </tr>
+                                      <tr>
+                                          <td>Número</td>
+                                          <td>{{studio.numero}}</td>
+                                      </tr>
+                                      <tr>
+                                          <td>Complemento</td>
+                                          <td> {% if studio.complemento %} {{studio.complemento | capfirst }} {% else %} Nenhum complemento {% endif %}</td>
+                                      </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+
+                            <div class="card" id="studio-form-edit" style="display:none;">
+                              <div class="card-body">
+                                <button class="btn btn-danger btn-sm float-right m-2" id="btn-studio-form-close"><strong><i class="far fa-close"></i> Fechar</strong></button>
+                                <form method="POST" action="{% url 'editar_dados_studio' %}" >
+                                  {% csrf_token %}
+                                  <input type="hidden" name="studio_id" value="{{studio.id}}">
+                                  {% bootstrap_form studio_form %}
+                                  <button class="btn btn-dark btn-block"><strong><i class="fas fa-save"></i> Salvar Alterações</strong></button>
+                                </form>
+                              </div>
+                            </div>
+                        </div>
+                        <!-- // -------- CERTIFICADOS ---------- // -->
+                        <div class="tab-pane fade" id="certificado" role="tabpanel" aria-labelledby="certificado-tab">
+                            <br>
+                              <span class="float-right">Deseja adicionar um novo certificado? <a id="certificado-add" class="btn btn-dark text-white btn-sm"> <strong> <i class="fas fa-plus text-white"></i> Adicionar </strong></a></p></span>
+                            <br>
+                             <!-- FORMULARIO DE ADIÇÂO -->
+                            <div class="card-body" id="certificado-form" style="display:none;">
+                              <button id="certificado-close" class="btn btn-danger float-right"> <i class="fas fa-times-circle text-white"></i></button>
+                              <br>
+                              <form action="{% url 'registrar_certificado' %}" method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                {% bootstrap_form certificado_form %}
+                                <input type="hidden" value="certificado" name="registro">         
+                                <button class="btn btn-dark btn-block"> <strong> <i class="fas fa-save"></i> Registrar </strong> </button>
+                              </form>
+                            </div>
+
+                            <br>
+                            <div id="certificados">
+                             <!-- LISTA -->
+                            {% if certificados %}
+                                {% for o in certificados %}                        
+                                    {% if o.certificado.ativo == True %}
+
+                                    <!-- CERTIFICADO -->
+                                    <div class="card m-1">                                                                              
+                                      <div class="card-body">
+                                        <h5>
+                                          <span class="text-left text-dark font-weight-bold ">{{o.certificado.titulo}}</span> 
+                                          <span class="float-right text-muted small ">{{o.certificado.data}}</span>
+                                        </h5>
+                                        <p >{{o.certificado.descricao}}</p>                            
+
+                                        <button type="button" class="btn btn-danger text-white float-right" data-toggle="modal" data-target="#modal-exclusao-certificado-{{o.certificado.id}}">
+                                          <strong> <i class="fas fa-trash-alt"></i> Remover </strong>
+                                        </button>
+          
+                                        <button id="{{o.certificado.id}}" class="btn btn-primary text-white float-right mr-1" type="submit" name="btn-edit-certificado">
+                                          <strong> <i class="fas fa-edit"></i> </strong>
+                                        </button>                            
+
+                                        </p>
+                                      </div>
+                                    </div>
+                                    
+                                    <!-- EXCLUIR CERTIFICADO -->
+                                    <div class="modal fade" id="modal-exclusao-certificado-{{o.certificado.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+                                      <div class="modal-dialog modal-dialog-scrollable" role="document">
+                                        <div class="modal-content">
+                                          <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalScrollableTitle">Deseja realmente remover este Certificado?</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Cancelar">
+                                              <span aria-hidden="true">&times;</span>
+                                            </button>
+                                          </div>
+                                          <div class="modal-body">
+                                            Um certificado removido não poderá ser recuperado novamente.
+                                          </div>
+                                          <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                            <form method="POST" action="{% url 'remover_certificado' %}">
+                                              {% csrf_token %}
+                                              <input type="hidden" name="certificado_id" value="{{o.certificado.id}}">
+                                              <button class="btn btn-danger text-white float-right" type="submit"><i class="fas fa-trash-alt"></i>Sim Remover</button>
+                                            </form>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                         
+                                    <!-- FORMULARIO -->
+                                    <div class="card bg-muted" id="certificado-form-{{o.certificado.id}}" style="display:none;">                                                                              
+                                      <div class="card-body">   
+                                          <button id="{{o.certificado.id}}" name="btn-certificado-form-close" class="btn btn-danger float-right mb-3"> 
+                                              <i class="fas fa-times-circle text-white"></i> Cancelar
+                                          </button>                                      
+                                          <form method="POST" action="{% url 'editar_certificado' %}">                      
+                                              {% csrf_token %}
+                                              {% bootstrap_form o.formulario %}
+                                              <input type="hidden" name="certificado_id" value="{{o.certificado.id}}">
+                                              <button class="btn btn-dark text-white btn-block" type="submit"> <i class="fas fa-save"></i>  Salvar Alterações </button>
+                                          </form>
+                                      </div>
+                                    </div>
+                                                    
+                                    {% endif %}
+                                    
+                                {% endfor %}   
+                      
+                                <br><br><br><br>
+                            {% else %}
+                              <p class="text-muted ">Nenhum certificado registrado até o momento.</p>
+                            {% endif %}
+                             
+                            </div> 
+
+                        </div>
+                        <!-- // -------- BIO ---------- // -->
+                        <div class="tab-pane fade" id="bio" role="tabpanel" aria-labelledby="bio-tab">
+                          
+                          {% if usuario.tatuador.bio %}
+                            <!-- BIOGRAFIA -->
+                            <div class="card" id="bio-content">
+                              <div class="card-body">                                                         
+                                <br>
+                                <button id="btn-edit-bio" class="btn btn-dark btn-sm text-white float-right"><strong> <i class="fas fa-edit"></i>  Editar Bio </strong> </button>
+                                <h5 class="text-center"> {{usuario.nome | upper }} </h5>
+                                <br>
+                                <h6>Apresentação</h6>
+                                <p>  {{usuario.tatuador.bio.apresentacao}}</p>
+                                <br>
+                                <h6>Trajetória</h6>
+                                <p>  {{usuario.tatuador.bio.conteudo}}</p>            
+                              </div>
+                            </div>
+                            <!-- FORMULARIO EDIÇÃO -->
+                            <div class="card" id="bio-edit-form" style="display:none;">
+                              <div class="card-body">                                                               
+                                <button id="btn-edit-form-close" class="btn btn-danger btn-sm float-right"> <strong> <i class="fas fa-times-circle text-white"></i> Cancelar </strong></button>
+                                <br>
+                                <form action="{% url 'editar_bio' %}" method="POST">
+                                    {% csrf_token %}
+                                    {% bootstrap_form bio_form %}   
+                                    <input type="hidden" name="bio_id" value="{{usuario.tatuador.bio.id}}">                     
+                                    <button class="btn btn-dark text-white btn-block" type="submit"> <strong><i class="fas fa-save"></i>  Salvar Alterações</strong> </button>
+                                </form>
+                              </div>
+                            </div>                           
+                          {% else %}
+                            <br>
+                            <p><strong>Nenhuma Bio registrada, deseja adicionar uma? </strong>  </p>                  
+                            <!-- FORMULARIO CADASTRO -->
+                            <div class="card" id="bio-register-form">
+                              <div class="card-body">
+                                {% if bio_form %}
+                                 <form action="{% url 'registrar_bio' %}" method="POST">
+                                    {% csrf_token %}
+                                    {% bootstrap_form bio_form %}
+                                    <input type="hidden" value="{{usuario.tatuador.id}}" name="tatuador_id">
+                                    <button class="btn btn-dark text-white btn-block" type="submit"><strong> <i class="fas fa-save"></i>  Registrar  </strong></button>
+                                  </form>
+                                {% endif %}     
+                              </div>
+                            </div>                                                                                                                                  
+                          {% endif %}
+                        </div>
+                        <!-- // -------- AGENDA ---------- // -->
+                        <div class="tab-pane fade" id="agenda-trabalho" role="tabpanel" aria-labelledby="agenda-tab">
+                          <br>
+                          <div class="card-columns">
+                            <!--    SEGUNDA    -->               
+                            {% if configuracao_agenda.segunda %}
+                              <div class="card" title="Horário de Almoço" data-toggle="popover" data-trigger="hover" data-content="De {{configuracao_agenda.segunda.horario_inicio_almoco}} até {{configuracao_agenda.segunda.horario_termino_almoco}}">                                     
+                                  <div class="card-body bg-dark rounded">
+                                      <p class="text-white text-center "><strong>Segunda</strong></p> 
+                                      <p class="text-white text-center"><strong><span>Das </span>{{configuracao_agenda.segunda.horario_inicio}} <span>Até </span>{{configuracao_agenda.segunda.horario_termino}}</strong></p>                                                                  
+                                      <form method="POST" action="{% url 'request_editar_configuracao' %}">
+                                          <input type="hidden" name="configuracao_agenda_id" value="{{configuracao_agenda.segunda.id}}">
+                                          <input type="hidden" name="agenda_id" value="{{usuario.tatuador.agenda.id}}">
+                                          {% csrf_token %}
+                                          <button class="btn btn-secondary btn-block btn-sm" type="submit" >
+                                            <strong><i class="fas fa-edit"></i> Editar </strong>
+                                          </button>                    
+                                      </form>                     
+                                  </div>
+                              </div>
+                            {% else %}
+                              <div class="card ">                               
+                                <div class="card-body bg-dark rounded">      
+                                  <p class="text-white text-center"><strong>Segunda</strong></p>      
+                                  <p class="text-white text-center"><strong>Não definida</strong></p>                  
+                                    <form method="POST" action="{% url 'request_configurar_dia_agenda' %}">
+                                      {% csrf_token %}
+                                      <input type="hidden" name="agenda_id" value="{{usuario.tatuador.agenda.id}}">
+                                      <input type="hidden" name="dia" value="segunda">
+                                      <button class="btn btn-secondary btn-sm btn-block" type="submit" > 
+                                        <strong><i class="fas fa-cog"></i> Configurar </strong>
+                                      </button>
+                                  </form>       
+                                </div>
+                              </div>
+                            {% endif %}
+                            
+                            <!--    TERÇA    -->               
+                            {% if configuracao_agenda.terca %}
+                              <div class="card" title="Horário de Almoço" data-toggle="popover" data-trigger="hover" data-content="De {{configuracao_agenda.terca.horario_inicio_almoco}} até {{configuracao_agenda.terca.horario_termino_almoco}}">                                     
+                                  <div class="card-body bg-dark rounded">
+                                      <p class="text-white text-center "><strong>Terça</strong></p> 
+                                      <p class="text-white text-center"><strong><span>Das </span>{{configuracao_agenda.terca.horario_inicio}} <span>Até </span>{{configuracao_agenda.terca.horario_termino}}</strong></p>                                                                  
+                                      <form method="POST" action="{% url 'request_editar_configuracao' %}">
+                                          <input type="hidden" name="configuracao_agenda_id" value="{{configuracao_agenda.terca.id}}">
+                                          <input type="hidden" name="agenda_id" value="{{usuario.tatuador.agenda.id}}">
+                                          {% csrf_token %}
+                                          <button class="btn btn-secondary btn-block btn-sm" type="submit" >
+                                            <strong><i class="fas fa-edit"></i> Editar </strong>
+                                          </button>                    
+                                      </form>                     
+                                  </div>
+                              </div>
+                            {% else %}
+                              <div class="card ">                               
+                                <div class="card-body bg-dark rounded">      
+                                  <p class="text-white text-center"><strong>Terça</strong></p>      
+                                  <p class="text-white text-center"><strong>Não definida</strong></p>                  
+                                    <form method="POST" action="{% url 'request_configurar_dia_agenda' %}">
+                                      {% csrf_token %}
+                                      <input type="hidden" name="agenda_id" value="{{usuario.tatuador.agenda.id}}">
+                                      <input type="hidden" name="dia" value="terca">
+                                      <button class="btn btn-secondary btn-sm btn-block" type="submit" > 
+                                        <strong><i class="fas fa-cog"></i> Configurar </strong>
+                                      </button>
+                                  </form>       
+                                </div>
+                              </div>
+                            {% endif %}
+
+                            <!--    QUARTA    -->               
+                            {% if configuracao_agenda.quarta %}
+                              <div class="card" title="Horário de Almoço" data-toggle="popover" data-trigger="hover" data-content="De {{configuracao_agenda.quarta.horario_inicio_almoco}} até {{configuracao_agenda.quarta.horario_termino_almoco}}">                                     
+                                  <div class="card-body bg-dark rounded">
+                                      <p class="text-white text-center "><strong>Quarta</strong></p> 
+                                      <p class="text-white text-center"><strong><span>Das </span>{{configuracao_agenda.quarta.horario_inicio}} <span>Até </span>{{configuracao_agenda.quarta.horario_termino}}</strong></p>                                                                  
+                                      <form method="POST" action="{% url 'request_editar_configuracao' %}">
+                                          <input type="hidden" name="configuracao_agenda_id" value="{{configuracao_agenda.quarta.id}}">
+                                          <input type="hidden" name="agenda_id" value="{{usuario.tatuador.agenda.id}}">
+                                          {% csrf_token %}
+                                          <button class="btn btn-secondary btn-block btn-sm" type="submit" >
+                                            <strong><i class="fas fa-edit"></i> Editar </strong>
+                                          </button>                    
+                                      </form>                     
+                                  </div>
+                              </div>
+                            {% else %}
+                              <div class="card ">                               
+                                <div class="card-body bg-dark rounded">      
+                                  <p class="text-white text-center"><strong>Quarta</strong></p>      
+                                  <p class="text-white text-center"><strong>Não definida</strong></p>                  
+                                    <form method="POST" action="{% url 'request_configurar_dia_agenda' %}">
+                                      {% csrf_token %}
+                                      <input type="hidden" name="agenda_id" value="{{usuario.tatuador.agenda.id}}">
+                                      <input type="hidden" name="dia" value="quarta">
+                                      <button class="btn btn-secondary btn-sm btn-block" type="submit" > 
+                                        <strong><i class="fas fa-cog"></i> Configurar </strong>
+                                      </button>
+                                  </form>       
+                                </div>
+                              </div>
+                            {% endif %}
+
+                            <!--    QUINTA    -->               
+                            {% if configuracao_agenda.quinta %}
+                              <div class="card" title="Horário de Almoço" data-toggle="popover" data-trigger="hover" data-content="De {{configuracao_agenda.quinta.horario_inicio_almoco}} até {{configuracao_agenda.quinta.horario_termino_almoco}}">                                     
+                                  <div class="card-body bg-dark rounded">
+                                      <p class="text-white text-center "><strong>Quinta</strong></p> 
+                                      <p class="text-white text-center"><strong><span>Das </span>{{configuracao_agenda.quinta.horario_inicio}} <span>Até </span>{{configuracao_agenda.quinta.horario_termino}}</strong></p>                                                                  
+                                      <form method="POST" action="{% url 'request_editar_configuracao' %}">
+                                          <input type="hidden" name="agenda_id" value="{{usuario.tatuador.agenda.id}}">
+                                          <input type="hidden" name="configuracao_agenda_id" value="{{configuracao_agenda.quinta.id}}">
+                                          {% csrf_token %}
+                                          <button class="btn btn-secondary btn-block btn-sm" type="submit" >
+                                            <strong><i class="fas fa-edit"></i> Editar </strong>
+                                          </button>                    
+                                      </form>                     
+                                  </div>
+                              </div>
+                            {% else %}
+                              <div class="card ">                               
+                                <div class="card-body bg-dark rounded">      
+                                  <p class="text-white text-center"><strong>Quinta</strong></p>      
+                                  <p class="text-white text-center"><strong>Não definida</strong></p>                  
+                                    <form method="POST" action="{% url 'request_configurar_dia_agenda' %}">
+                                      {% csrf_token %}
+                                      <input type="hidden" name="agenda_id" value="{{usuario.tatuador.agenda.id}}">
+                                      <input type="hidden" name="dia" value="quinta">
+                                      <button class="btn btn-secondary btn-sm btn-block" type="submit" > 
+                                        <strong><i class="fas fa-cog"></i> Configurar </strong>
+                                      </button>
+                                  </form>       
+                                </div>
+                              </div>
+                            {% endif %}
+
+                            <!--    SEXTA    -->               
+                            {% if configuracao_agenda.sexta %}
+                              <div class="card" title="Horário de Almoço" data-toggle="popover" data-trigger="hover" data-content="De {{configuracao_agenda.sexta.horario_inicio_almoco}} até {{configuracao_agenda.sexta.horario_termino_almoco}}">                                     
+                                  <div class="card-body bg-dark rounded">
+                                      <p class="text-white text-center "><strong>Sexta</strong></p> 
+                                      <p class="text-white text-center"><strong><span>Das </span>{{configuracao_agenda.sexta.horario_inicio}} <span>Até </span>{{configuracao_agenda.sexta.horario_termino}}</strong></p>                                                                  
+                                      <form method="POST" action="{% url 'request_editar_configuracao' %}">
+                                          <input type="hidden" name="configuracao_agenda_id" value="{{configuracao_agenda.sexta.id}}">
+                                          <input type="hidden" name="agenda_id" value="{{usuario.tatuador.agenda.id}}">
+                                          {% csrf_token %}
+                                          <button class="btn btn-secondary btn-block btn-sm" type="submit" >
+                                            <strong><i class="fas fa-edit"></i> Editar </strong>
+                                          </button>                    
+                                      </form>                     
+                                  </div>
+                              </div>
+                            {% else %}
+                              <div class="card ">                               
+                                <div class="card-body bg-dark rounded">      
+                                  <p class="text-white text-center"><strong>Sexta</strong></p>      
+                                  <p class="text-white text-center"><strong>Não definida</strong></p>                  
+                                    <form method="POST" action="{% url 'request_configurar_dia_agenda' %}">
+                                      {% csrf_token %}
+                                      <input type="hidden" name="agenda_id" value="{{usuario.tatuador.agenda.id}}">
+                                      <input type="hidden" name="dia" value="sexta">
+                                      <button class="btn btn-secondary btn-sm btn-block" type="submit" > 
+                                        <strong><i class="fas fa-cog"></i> Configurar </strong>
+                                      </button>
+                                  </form>       
+                                </div>
+                              </div>
+                            {% endif %}
+
+                            <!--    SÁBADO    -->               
+                            {% if configuracao_agenda.sabado %}
+                              <div class="card" title="Horário de Almoço" data-toggle="popover" data-trigger="hover" data-content="De {{configuracao_agenda.sabado.horario_inicio_almoco}} até {{configuracao_agenda.sabado.horario_termino_almoco}}">                                     
+                                  <div class="card-body bg-dark rounded">
+                                      <p class="text-white text-center "><strong>Sábado</strong></p> 
+                                      <p class="text-white text-center"><strong><span>Das </span>{{configuracao_agenda.sabado.horario_inicio}} <span>Até </span>{{configuracao_agenda.sabado.horario_termino}}</strong></p>                                                                  
+                                      <form method="POST" action="{% url 'request_editar_configuracao' %}">
+                                          <input type="hidden" name="configuracao_agenda_id" value="{{configuracao_agenda.sabado.id}}">
+                                          <input type="hidden" name="agenda_id" value="{{usuario.tatuador.agenda.id}}">
+                                          {% csrf_token %}
+                                          <button class="btn btn-secondary btn-block btn-sm" type="submit" >
+                                            <strong><i class="fas fa-edit"></i> Editar </strong>
+                                          </button>                    
+                                      </form>                     
+                                  </div>
+                              </div>
+                            {% else %}
+                              <div class="card ">                               
+                                <div class="card-body bg-dark rounded">      
+                                  <p class="text-white text-center"><strong>Sábado</strong></p>      
+                                  <p class="text-white text-center"><strong>Não definida</strong></p>                  
+                                    <form method="POST" action="{% url 'request_configurar_dia_agenda' %}">
+                                      {% csrf_token %}
+                                      <input type="hidden" name="agenda_id" value="{{usuario.tatuador.agenda.id}}">
+                                      <input type="hidden" name="dia" value="sabado">
+                                      <button class="btn btn-secondary btn-sm btn-block" type="submit" > 
+                                        <strong><i class="fas fa-cog"></i> Configurar </strong>
+                                      </button>
+                                  </form>       
+                                </div>
+                              </div>
+                            {% endif %}
+
+                            <!--    DOMINGO    -->               
+                            {% if configuracao_agenda.domingo %}
+                              <div class="card" title="Horário de Almoço" data-toggle="popover" data-trigger="hover" data-content="De {{configuracao_agenda.domingo.horario_inicio_almoco}} até {{configuracao_agenda.domingo.horario_termino_almoco}}">                                     
+                                  <div class="card-body bg-dark rounded">
+                                      <p class="text-white text-center "><strong>Domingo</strong></p> 
+                                      <p class="text-white text-center"><strong><span>Das </span>{{configuracao_agenda.domingo.horario_inicio}} <span>Até </span>{{configuracao_agenda.domingo.horario_termino}}</strong></p>                                                                  
+                                      <form method="POST" action="{% url 'request_editar_configuracao' %}">
+                                          <input type="hidden" name="agenda_id" value="{{usuario.tatuador.agenda.id}}">
+                                          <input type="hidden" name="configuracao_agenda_id" value="{{configuracao_agenda.domingo.id}}">
+                                          {% csrf_token %}
+                                          <button class="btn btn-secondary btn-block btn-sm" type="submit" >
+                                            <strong><i class="fas fa-edit"></i> Editar </strong>
+                                          </button>                    
+                                      </form>                     
+                                  </div>
+                              </div>
+                            {% else %}
+                              <div class="card ">                               
+                                <div class="card-body bg-dark rounded">      
+                                  <p class="text-white text-center"><strong>Domingo</strong></p>      
+                                  <p class="text-white text-center"><strong>Não definida</strong></p>                  
+                                    <form method="POST" action="{% url 'request_configurar_dia_agenda' %}">
+                                      {% csrf_token %}
+                                      <input type="hidden" name="agenda_id" value="{{usuario.tatuador.agenda.id}}">
+                                      <input type="hidden" name="dia" value="domingo">
+                                      <button class="btn btn-secondary btn-sm btn-block" type="submit" > 
+                                        <strong><i class="fas fa-cog"></i> Configurar </strong>
+                                      </button>
+                                  </form>       
+                                </div>
+                              </div>
+                            {% endif %}
+
+                            <!--    FERIADO RELIGIOSO    -->               
+                            {% if configuracao_agenda.feriado_religioso %}
+                              <div class="card" title="Horário de Almoço" data-toggle="popover" data-trigger="hover" data-content="De {{configuracao_agenda.feriado_religioso.horario_inicio_almoco}} até {{configuracao_agenda.feriado_religioso.horario_termino_almoco}}">                                     
+                                  <div class="card-body bg-dark rounded">
+                                      <p class="text-white text-center "><strong>Feriado Religioso</strong></p> 
+                                      <p class="text-white text-center"><strong><span>Das </span>{{configuracao_agenda.feriado_religioso.horario_inicio}} <span>Até </span>{{configuracao_agenda.feriado_religioso.horario_termino}}</strong></p>                                                                  
+                                      <form method="POST" action="{% url 'request_editar_configuracao' %}">
+                                          <input type="hidden" name="agenda_id" value="{{usuario.tatuador.agenda.id}}">
+                                          <input type="hidden" name="configuracao_agenda_id" value="{{configuracao_agenda.feriado_religioso.id}}">
+                                          {% csrf_token %}
+                                          <button class="btn btn-secondary btn-block btn-sm" type="submit" >
+                                            <strong><i class="fas fa-edit"></i> Editar </strong>
+                                          </button>                    
+                                      </form>                     
+                                  </div>
+                              </div>
+                            {% else %}
+                              <div class="card ">                               
+                                <div class="card-body bg-dark rounded">      
+                                  <p class="text-white text-center"><strong>Feriado Religioso</strong></p>      
+                                  <p class="text-white text-center"><strong>Não definida</strong></p>                  
+                                    <form method="POST" action="{% url 'request_configurar_dia_agenda' %}">
+                                      {% csrf_token %}
+                                      <input type="hidden" name="agenda_id" value="{{usuario.tatuador.agenda.id}}">
+                                      <input type="hidden" name="dia" value="feriado_religioso">
+                                      <button class="btn btn-secondary btn-sm btn-block" type="submit" > 
+                                        <strong><i class="fas fa-cog"></i> Configurar </strong>
+                                      </button>
+                                  </form>       
+                                </div>
+                              </div>
+                            {% endif %}
+                          </div>
+                        </div>                  
+                    </div>                  
+                </div>            
+            </div>
+        </div>
+        <div class="col-2 d-none d-md-block"></div>
+    </div>  
+</div>
+
+<!-- The Modal -->
+<div class="modal" id="modalBloqueio">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title text-danger">REMOVER PERFIL DE TATUADOR</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      
+      <!-- Modal body -->
+      <div class="modal-body">
+        Tem certeza de que remover seu perfil de tatuador?
+      </div>
+      
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal"><strong><i class="fas fa-times"></i> Cancelar</strong></button>
+        <a href="{% url 'bloquear_tatuador' pk=usuario.tatuador.pk %}" class="btn btn-danger"><strong><i class="fas fa-trash-alt"></i> Remover Perfil</strong></a>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript" >
+    function modalBloq(){
+      $("#modalBloqueio").modal();
+    }
+    // ---------- INPUTs MASK AND CONTROLL ---------- //
+    $("#cep").mask("00000-000");
+    $("#telefone").mask("(00) 0000-0000");
+    $("#wathsapp").mask("(00) 0000-0000");
+    $("#cpf").mask("000.000.000-00");
+
+    $(document).ready(function(){  
+        $('[data-toggle="popover"]').popover();  
+
+        $("#certificado-add").click(function(){
+            $("#certificado-form").show(1000);
+        });
+        $("#certificado-close").click(function(){
+            $("#certificado-form").hide(1000);
+        });
+    });
+
+    // ----- TATUADOR ----- //
+    $("#btn-tatuador-form-edit").click(function(){
+      $("#tatuador-data").hide(1000, function(){
+        $("#tatuador-form").show(1000);
+      });
+    });
+
+    $("#btn-tatuador-form-close").click(function(){
+      $("#tatuador-form").hide(1000, function(){
+        $("#tatuador-data").show(1000);
+      });
+    });
+
+    // ----- STUDIO ----- //
+    $("#btn-studio-form").click(function(){
+      $("#studio-content").hide(1000, function(){
+        $("#studio-form-edit").show(1000);
+      });
+    });
+
+    $("#btn-studio-form-close").click(function(){
+      $("#studio-form-edit").hide(1000, function(){
+        $("#studio-content").show(1000);
+      });
+    });
+
+    // ----- BIOGRAFIA ----- //
+    
+    $("#btn-edit-bio").click(function(){
+      $("#bio-content").hide(1000, function(){
+        $("#bio-edit-form").show(1000);
+      });
+    });
+   
+    $("#btn-edit-form-close").click(function(){
+      $("#bio-edit-form").hide(1000, function() {
+        $("#bio-content").show();
+      });
+    });
+
+    // ----- CERTIFICADO ----- //
+    $("button[name='btn-edit-certificado']").click(function(){
+      var id = $(this).attr("id");
+      $("#certificado-form-"+id).toggle();
+    });
+    $("button[name='btn-certificado-form-close']").click(function(){
+      var id = $(this).attr("id");
+      $("#certificado-form-"+id).hide();
+    });
+    $("#certificacao-add").click(function(){
+        $("#formulario_certificacao").toggle();
+    });
+    $("#certificacao-close").click(function(){
+        $("#formulario_certificacao").hide();
+    });
+
+    
+
+</script>
+{% endblock %}
+    

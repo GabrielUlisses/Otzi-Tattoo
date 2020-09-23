@@ -1,0 +1,31 @@
+<style>
+    .img-card{
+        margin: 4px;
+        box-shadow: 4px 4px 6px black;
+    }
+    .img-card:hover{
+        width: 210px;
+        height: 210px;
+        /*opacity: 95%;*/
+        transition: 0.6s;
+    }
+
+    figcaption{
+        margin-top: -30px;
+        opacity: 76%;
+    }
+    .aprovacao-text{
+        color: crimson;
+    }
+</style>
+
+<div>
+    <a href="{% url 'visualizar_publicacao' pk=p.id %}"><img class="img thumbnail rounded img-card" src='{{p.midia.thumbnail.url}}' width="200" height="200"></a>
+    <figcaption>
+        <strong><span class="aprovacao-text float-left ml-2"><i class="fas fa-heart"></i> {% if p.nr_aprovacoes %} {{p.nr_aprovacoes}} {% else %} 0 {%endif%}</span>  </strong>    
+    </figcaption>
+</div>
+    
+<script>
+
+</script>

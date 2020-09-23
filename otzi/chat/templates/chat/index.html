@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Sala de Bate-Papo</title>
+     {% include "./basics.html" %} 
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-2 d-none d-md-block"></div>
+            <div class="col">
+                <br>
+                <h5 class="text-dark"> <strong>Em qual sala de bate-papo você gostaria de entrar?</strong></h5>
+                <input id="room-name-input" class="form-control" placeholder="Insira uma sala" type="text">
+                
+                <button id="room-name-submit" class="btn btn-primary mt-2 p-1 w-25" >
+                    <strong> Entrar</strong>
+                </button>
+            </div>
+            <div class="col-2 d-none d-md-block"></div>
+        </div>
+    </div>
+
+    <footer>
+        <script>
+            document.querySelector('#room-name-input').focus();
+            document.querySelector('#room-name-input').onkeyup = function(e) {
+                if (e.keyCode === 13) {  // enter, return
+                    document.querySelector('#room-name-submit').click();
+                }
+            };
+    
+            document.querySelector('#room-name-submit').onclick = function(e) {
+                var roomName = document.querySelector('#room-name-input').value;
+                window.location.pathname = '/chat/' + roomName + '/';
+            };
+        </script>
+    </footer>
+</body>
+</html>

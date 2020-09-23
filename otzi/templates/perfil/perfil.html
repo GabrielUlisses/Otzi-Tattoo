@@ -1,0 +1,817 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load bootstrap4 %}
+
+{% block content %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script>
+
+<style>
+    .texto{
+        font-family: "Times New Roman";
+    }
+    .nav-link{
+        margin-left: 1px;
+        margin-bottom: 1px;
+    }
+    
+</style>
+
+<br>
+
+<div class="container" id="form-edicao" style="display:none;">
+    <div class="row">
+        <div class="col-2 d-none d-md-block"></div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">                       
+                    <button id="btn-voltar-edicao" class="btn btn-dark btn-sm mb-3 foat-left"> <strong><i class="fas fa-arrow-circle-left"></i> voltar </strong></button>
+                    <form class="form" action="{% url 'editar_dados_perfil' %}" method="POST" enctype="multipart/form-data"> 
+                        {% csrf_token %}           
+                        
+                        {% for hidden_field in user_form.hidden_fields %}                       
+                          {{ hidden_field }}
+                        {% endfor %}
+
+
+                        <strong>{% bootstrap_label user_form.username.label  %}</strong>
+                        {% bootstrap_field user_form.username show_label=False  addon_before='<i class="fas fa-user"></i>'  %}                
+
+                        <strong>{% bootstrap_label user_form.email.label  %}</strong>
+                        {% bootstrap_field user_form.email show_label=False  addon_before='<i class="fas fa-envelope"></i>'  %}
+
+                        <strong>{% bootstrap_label usuario_form.nome.label  %}</strong>
+                        {% bootstrap_field usuario_form.nome show_label=False  addon_before='<i class="fas fa-user"></i>'  %}                                            
+                  
+                        <div class="custom-control custom-checkbox">
+                          {{ usuario_form.desenhista }}
+                          <label class="custom-control-label" for="id_desenhista"><strong>{{ usuario_form.desenhista.label }}</strong></label>                        
+                        </div>
+                        <small class="text-muted"> {{ usuario_form.desenhista.help_text }} </small>
+                        <br>
+                        <br>
+                        <div class="custom-file">
+                            {{ usuario_form.imagem }}
+                            <label class="custom-file-label" for="customFile"><strong>{{usuario_form.imagem.label}}</strong></label>
+                        </div>    
+
+                        <br>
+                        <br>
+
+                        <button type="submit" class="btn btn-dark btn-block"><strong><i class="fas fa-save"></i> Salvar Alterações</strong></button>
+                    </form>
+                </div>
+            </div> 
+        </div>
+        <div class="col-2 d-none d-md-block"></div>
+    </div>
+</div>
+
+<div class="container" id="page-content" style="display:none;">
+    <div class="row">
+        <div class="col-1 d-none d-md-block"></div>
+        <div class="col"> 
+            {% bootstrap_messages messages %}
+            <div class="card" >
+                <div class="card-body">
+                  <a class="btn btn-dark btn-sm text-white" href="{% url 'index' %}"><strong> <i class="fas fa-arrow-alt-circle-left"></i> home</strong></a>
+                  <br>
+                  <br>
+
+                    <div class="d-none d-md-block">
+                      <!-- Nav pills -->
+                    <ul class="nav nav-pills" role="tablist">
+                      <li class="nav-item">
+                          <a class="nav-link active btn-dark" data-toggle="pill" href="#usuario"><strong><i class="fas fa-user"></i> Principal </strong></a>
+                      </li>
+                      <li class="nav-item">
+                          <a class="nav-link btn-dark" data-toggle="pill" href="#tatuador"><strong>Tatuadores</strong></a>
+                      </li>
+                      <li class="nav-item">
+                          <a class="nav-link btn-dark" data-toggle="pill" href="#studios"><strong><i class="fas fa-map-marker-alt"></i> Stúdios</strong></a>
+                      </li>
+                      <li class="nav-item">
+                          <a class="nav-link btn-dark" data-toggle="pill" href="#desenhistas"><strong><i class="fas fa-palette"></i> Desenhistas</strong></a>
+                      </li>
+                      <li class="nav-item">
+                          <a class="nav-link btn-dark" data-toggle="pill" href="#usuarios"><strong><i class="fas fa-users"></i> Usuarios</strong></a>
+                      </li>
+                  </ul>
+                    </div>
+
+                    <div class="d-block d-md-none">
+                      <div class="dropdown dropright float-left">
+                          <button class="btn btn-dark btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <i class="fas fa-cog"></i> <strong>Opções</strong>
+                          </button>
+                          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <ul class="nav nav-pills" role="tablist">
+                              <li class="nav-item btn-sm w-100">
+                                  <a class="nav-link active btn-dark btn-sm" data-toggle="pill" href="#usuario"><strong><i class="fas fa-user"></i> Principal </strong></a>
+                              </li>
+                              <li class="nav-item btn-sm w-100">
+                                  <a class="nav-link btn-dark" data-toggle="pill" href="#tatuador"><strong>Tatuadores</strong></a>
+                              </li>
+                              <li class="nav-item btn-sm w-100">
+                                  <a class="nav-link btn-dark" data-toggle="pill" href="#studios"><strong><i class="fas fa-map-marker-alt"></i> Stúdios</strong></a>
+                              </li>
+                              <li class="nav-item btn-sm w-100">
+                                  <a class="nav-link btn-dark" data-toggle="pill" href="#desenhistas"><strong><i class="fas fa-palette"></i> Desenhistas</strong></a>
+                              </li>
+                              <li class="nav-item btn-sm w-100">
+                                  <a class="nav-link btn-dark" data-toggle="pill" href="#usuarios"><strong><i class="fas fa-users"></i> Usuarios</strong></a>
+                              </li>
+                          </ul>
+                          </div>
+                      </div>
+                    </div>
+                    <br>
+                    <div class="tab-content">
+                      <!--     USUARIO     -->
+                      <div id="usuario" class="container tab-pane active"><br>
+                            <div class="card">
+                              <div class="card-body">
+                                <div id="user-content">    
+
+                                  <div class="d-none d-md-block">
+                                    <div class="float-right btn-group">
+                                      <button id="btn-editar-perfil" class="btn btn-dark btn-sm btn-editar-perfil">
+                                        <span class="badge badge-light"><i class="fas fa-user-edit"></i></span> <strong>Editar</strong>
+                                      </button>
+                                      {% if usuario.tatuador %}                                          
+                                          {% if usuario.tatuador.ativo %}
+                                          <a href="{% url 'carregar_pagina_perfil_tatuador' %}" class="btn btn-dark text-white btn-sm"> <strong><i class="fas fa-user"></i> Perfil Tatuador</strong> </a>
+                                          {% endif %}                                            
+                                      {% else %}
+                                          <a href="{% url 'request_registrar_tatuador' %}" id="btn-registrar-tatuador" class="btn btn-dark btn-sm"><i class="fas fa-plus-square"></i> <strong>Tornar-se Tatuador</strong></a>
+                                      {% endif %}
+                                      <button id="btn-grid-publicacoes" class="btn btn-dark btn-sm btn-grid-publicacoes"> <i class="fas fa-file-alt"></i> <strong>Minhas Publicações</strong> <span class="badge badge-light">{{numero_publicacoes}}</span></button>
+                                      <button class="btn btn-danger btn-sm " onclick="excluirPerfil()"> <strong><i class="fas fa-trash-alt"></i>  Excluir perfil</strong></button>
+                                    </div>
+                                  </div>
+                                  
+                                  <div class="d-block d-md-none">
+                                    <div class="dropdown dropleft float-right">
+                                        <button class="btn btn-dark btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-cog"></i>
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                          <button id="btn-editar-perfil" class="dropdown-item btn-editar-perfil">
+                                            <i class="fas fa-user-edit"></i></span> <strong>Editar</strong><span class="badge badge-light"></span>
+                                          </button>
+                                          {% if usuario.tatuador %}
+                                              
+                                              {% if usuario.tatuador.ativo %}
+                                              <a href="{% url 'carregar_pagina_perfil_tatuador' %}" class="dropdown-item "> <strong><i class="fas fa-user"></i> Perfil Tatuador</strong> </a>
+                                              {% endif %}
+                                                
+                                          {% else %}
+                                              <a href="{% url 'request_registrar_tatuador' %}" id="dropdown-item " class="btn btn-dark btn-sm"><i class="fas fa-plus-square"></i> <strong>Tornar-se Tatuador</strong></a>
+                                          {% endif %}
+                                          <button id="btn-grid-publicacoes" class="dropdown-item  btn-grid-publicacoes"> <i class="fas fa-file-alt"></i> <strong>Minhas Publicações</strong> <span class="badge badge-light">{{numero_publicacoes}}</span></button>                     
+                                          <button class="dropdown-item text-danger" onclick="excluirPerfil()"> <strong><i class="fas fa-trash-alt"></i>  Excluir perfil</strong></button>                        
+                                        </div>
+                                    </div>
+                                  </div>     
+
+                                  <br>
+                                  <br>
+                                  <table class="table table-hover table-striped">                                   
+                                      <tbody>                                   
+                                          <tr>
+                                              <td><strong>Nome</strong></td>
+                                              <td><strong>{{usuario.nome|upper}}</strong></td>
+                                          </tr>
+                                          <tr>
+                                              <td><strong>E-mail</strong></td>
+                                              <td><strong>{{usuario.usuario.email}}</strong></td>
+                                          </tr>
+                                          <tr>
+                                              <td><strong>Login</strong></td>
+                                              <td><strong>{{usuario.usuario.username}}</strong></td>
+                                          </tr>
+                                      </tbody>
+                                  </table> 
+  
+                              </div>
+                              </div>
+                            </div>                                                      
+                      </div>
+                      <!--     TATUADORES     -->
+                      <div id="tatuador" class="container tab-pane fade"><br>
+                        <div class="card">
+                          <div class="card-body">
+                            <div class="row">
+                              <div class="col-lg-6 col-md-6">
+                                <div class="input-group ml-1">
+                                  <input id="tatuador-search" type="text" class="form-control" placeholder="Procurar">
+                                  <div class="input-group-append">
+                                    <button class="btn" onclick="searchTatuadores()"><strong class="text-secondary"><i class="fas fa-search ml-1 mr-1"></i></strong></button>
+                                  </div>
+                                </div>
+                              </div>
+                             </div>
+                             <br>
+                             <div class="list-group">                         
+                             </div> 
+                          </div>
+                        </div>                                                
+                      </div>
+                      <!--     STUDIOS     -->
+                      <div id="studios" class="container tab-pane fade m-0"><br>
+                        <div class="card"> 
+                          <div class="card-body">
+                            <div class="row">
+                              <div class="col-lg-6 col-md-6">
+                                <div class="input-group ml-1">
+                                  <input id="studio-search" type="text" class="form-control" placeholder="Busca">                          
+                                  <div class="input-group-append">
+                                    <button class="btn" onclick="searchStudios()"><strong class="text-secondary"><i class="fas fa-search ml-1 mr-1"></i></strong></button>
+                                  </div>
+                                </div>
+                              </div>                                                    
+                            </div>
+                            <br>
+                            <div class="list-group">
+                                {% comment %}
+                                {% for obj in studios %}
+                                {% include "../components/list-group-item/studio.html" %}
+                            {% endfor %}
+                                {% endcomment %}
+                            </div> 
+                          </div>
+                        </div>
+                      </div>                   
+                      <!--     DESENHISTAS     -->
+                      <div id="desenhistas" class="container tab-pane fade"><br>
+                        <div class="card">
+                          <div class="card-body">
+                            <div class="row">
+                              <div class="col-lg-6 col-md-6">
+                                <div class="input-group ml-1">
+                                  <input id="desenhista-search" type="text" class="form-control" placeholder="Procurar">
+                                  <div class="input-group-append">
+                                    <button class="btn" onclick="searchDesenhistas()"><strong class="text-secondary"><i class="fas fa-search ml-1 mr-1"></i></strong></button>
+                                  </div>
+                                </div>
+                              </div>                          
+                            </div>
+                             <br>
+                            <div class="list-group">                                                                     
+                            </div>
+                          </div>
+                        </div> 
+                      </div>
+                      <!--     USUARIOS     -->
+                      <div id="usuarios" class="container tab-pane fade"><br>
+                        <div class="card">
+                          <div class="card-body">
+                            <div class="row">
+                              <div class="col-lg-6 col-md-6">
+                                <div class="input-group ml-1">
+                                  <input id="usuario-search" type="text" class="form-control" placeholder="Procurar">
+                                  <div class="input-group-append">
+                                    <button class="btn" onclick="searchUsuarios()"><strong class="text-secondary"><i class="fas fa-search ml-1 mr-1"></i></strong></button>
+                                  </div>
+                                </div>
+                              </div>
+                             </div>
+                             <br>
+                            <div class="list-group">                                                                                     
+                            </div> 
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                </div>
+            </div>      
+        </div>
+        <div class="col-1 d-none d-md-block"></div>
+    </div>
+
+</div>
+
+<div id="grid-publicacoes" class="container-fluid" style="display:none;">
+    <div class="row">     
+        <div class="col d-flex justify-content-center">
+            {% if minhas_publicacoes %}
+                <div class="card-group">
+                    {% for p in minhas_publicacoes %}
+                        {% include "../components/publicacao_card.html" %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <center><p><h5><strong class="text-light">Nenhuma publicação para exibir</strong></h5></p></center>
+            {% endif %}
+        </div>                  
+    </div>
+</div>
+
+<!-- // ---------- MODAIS ---------- // -->
+
+<div class="container">
+  <div class="modal fade" id="modal-remover-perfil" tabindex="-1" role="dialog" aria-labelledby="Remover Perfil" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"><strong class="text-danger">Exclusão de Perfil</strong></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <strong>Deseja realmente excluir seu perfil?</strong> 
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal"><strong> <i class="fas fa-times-circle "></i> Cancelar </strong></button>
+          <a class="btn btn-danger" href="{% url 'bloquear_usuario' pk=usuario.id %}" ><strong><i class="fas fa-trash-alt"></i> Sim, Excluir!</strong></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container" id="container-modal">
+
+  <!-- The Modal -->
+  <div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <center><h4 class="modal-title text-primary">Termo de Registro Desenhista</h4></center>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">       
+            <p><strong>Para realizar sua especialização para o perfil de desenhista é necessario estar de acordo com as regras e normas a seguir:</strong></p>
+            <p><strong>1. Estar de acordo com os termos de registro do sistema.</strong></p>
+            <p><strong>2. As publicações de um usuário de perfil desenhista, espera-se que a maioria das
+              publicações totais sejam de material artístico desenvolvido pelo mesmo, o
+              não cumprimento dessa condição pode acarretar a perda do perfil de
+              desenhista.</strong></p>
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-sm btn-danger" onclick="cancelarEsp()" data-dismiss="modal"> <strong> <i class="fas fa-times-circle"></i> Cancelar </strong> </button>
+          <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal"><strong> <i class="fas fa-arrow-circle-right"></i> Entendi, desejo prosseguir  </strong></button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="container" id="container-modal-orcamento">
+
+    <!-- The Modal -->
+    <div class="modal fade" id="modalOrcamento">
+      <div class="modal-dialog">
+        <div class="modal-content">
+        
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="text-muted text-center mt-4 mb-4"> PEDIDO DE ORÇAMENTO </h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          
+          <!-- Modal body -->
+          <div class="modal-body">       
+            <form method="POST" action="{% url 'gerar_pedido_orcamento' %}" enctype="multipart/form-data" name="pedido_orcamento_form">
+                {% csrf_token %}
+                {% bootstrap_form pedido_orcamento_form exclude='img_1, img_2, img_3,tatuadores' %}                                                       
+                                 
+                <p><span class="text-secondary" style="font-size: 16px;"><strong> 
+                  Você pode escolher até três imagens que ajudem o tatuador a compreender o que você deseja, 
+                  podendo ser a imagem de uma tatuagem ou de uma arte que sirva de inspiração.
+                </strong></span></p>
+
+                <div class="row">
+                  <div class="col">
+                    {% bootstrap_field pedido_orcamento_form.img_1 %}
+                  </div>
+                  <div class="col"> 
+                    <img id="img_1" style="display:none;">
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <div class="col">
+                    {% bootstrap_field pedido_orcamento_form.img_2 %}
+                  </div>
+                  <div class="col"> 
+                    <img id="img_2" style="display:none;">
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col">
+                    {% bootstrap_field pedido_orcamento_form.img_3 %}
+                  </div>
+                  <div class="col"> 
+                    <img id="img_3" style="display:none;">
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-dark btn-block"> 
+                    <strong>Enviar Pedido</strong>
+                    <strong class="bg-success pl-2 pr-2 rounded float-right" onclick="submit()"><i class="fa fa-arrow-right"></i></strong>
+                </button>           
+              </form>
+          </div>  
+                                   
+        </div>
+      </div>
+    </div>
+  
+</div>
+
+
+<br><br><br><br>
+
+
+<script type="text/javascript" >
+
+    function cancelarEsp(){
+      $("input[name='desenhista']").prop("checked",false);
+    }
+
+    // ---------- INPUTs MASK ---------- //
+    $("#cep").mask("00000-000");
+    $("#numero").mask("0000");
+
+    // ---------- LIST GROUP ITEM CONTROLL ---------- //
+    function tatuadorGridItem(id){
+        $("#tatuador-"+id).toggle();
+    }
+    function studioGridItem(id){
+        $("#studio-"+id).toggle();
+    }
+    function desenhistaGridItem(id){
+        $("#desenhista-"+id).toggle();
+    }
+    function usuarioGridItem(id){
+        $("#usuario-"+id).toggle();
+    }
+
+    // ---------- CONTROLE DE CONTEÚDO ---------- //
+    $(document).ready(function(){  
+
+        getStudios();
+        getUsuarios();
+        getTatuadores();
+        getDesenhistas();
+        
+        $("#page-content").show(700);          
+        
+        // ---------- FILE INPUT CONTROLL ----------//
+        $("#selecao-arquivo").change(function(){
+            var file = String($(this).val());
+            file = file.replace("C:\\fakepath\\","").split(".");
+            $("#saida-arquivo").val(file[0]);
+        });
+
+        // ---------- CHECKBOX INPUT CONTROL ----------//
+        $("input[name='desenhista']").change(function(){
+            if ($(this).is(":checked") == true)
+            {
+                $("#myModal").delay(500).modal(1000);
+            }
+        });
+
+        // ---------- CONTROLE DE CONTEÙDO ADICIONAL ----------//
+        $("#btn-voltar-edicao").click(function(){
+            $("#form-edicao").fadeOut(1000, function(){
+                $("#page-content").fadeIn(1000);
+                $("#grid-publicacoes").fadeIn(1000);
+            });         
+        });
+
+        $(".btn-editar-perfil").click(function(){
+            if ($("#grid-publicacoes").css("display") != "none"){
+                $("#grid-publicacoes").hide(1000, function(){
+                    $("#page-content").fadeOut(1000, function(){
+                        $("#form-edicao").fadeIn(1000);               
+                    });
+                });
+            }else{
+                $("#page-content").fadeOut(1000, function(){
+                    $("#form-edicao").fadeIn(1000);              
+                });
+            } 
+        });
+
+        $(".btn-grid-publicacoes").click(function(){
+            $("#grid-publicacoes").toggle(1000);           
+        });    
+
+    });
+
+    // ---------- FORM IMAGE INPUT CONTROL ----------- //      
+    $("#id_img_1").change(function(){
+    if (this.files && this.files[0]) {
+      var file = new FileReader();
+      file.onload = function(e) {                
+        $("#img_1").attr({
+          "src": e.target.result,
+          "width": 70,
+          "height": 70,
+          "class": "img rounded"
+        }).css({
+          "display":"block"
+        });
+      };       
+      file.readAsDataURL(this.files[0]);
+    }
+  });
+
+    $("#id_img_2").change(function(){
+    if (this.files && this.files[0]) {
+      var file = new FileReader();
+      file.onload = function(e) {                
+        $("#img_2").attr({
+          "src": e.target.result,
+          "width": 70,
+          "height": 70,
+          "class": "img rounded"
+        }).css({
+          "display":"block"
+        });
+      };       
+      file.readAsDataURL(this.files[0]);
+    }
+  });
+
+    $("#id_img_3").change(function(){
+    if (this.files && this.files[0]) {
+      var file = new FileReader();
+      file.onload = function(e) {                
+        $("#img_3").attr({
+          "src": e.target.result,
+          "width": 70,
+          "height": 70,
+          "class": "img rounded"
+        }).css({
+          "display":"block"
+        });
+      };       
+      file.readAsDataURL(this.files[0]);
+    }
+  });
+
+    // ---------- MODAL CONTROLL ----------- //
+    function excluirPerfil(){
+          $("#modal-remover-perfil").modal();
+        }
+
+    function gerarPedidoOrcamento(id){
+        $("#usuario_id").val(id);
+        $("#modalOrcamento").modal();
+    }
+
+    // ---------- AJAX REQUESTS ---------- //
+    function getUsuarios(username){
+    	$.ajax({
+    	  method: "GET",
+		    url: username == undefined ? "{% url 'get_usuarios' %}" : "{% url 'get_usuarios' %}"+username+"/",
+  		  cache: false,
+  		  beforeSend: function( xhr ) {
+
+     	  },
+    	})
+    	.done(function(data) {
+        data.forEach(usuarioListItem);
+    	  //console.log(data);
+    	})
+    	.fail(function(error) {
+    	  //console.log(error);
+    	})
+    	.always(function() {
+    	  //alert( "complete" );
+    	});
+  	}
+    
+    function getTatuadores(username){
+      $.ajax({
+        method: "GET",
+        url: username == undefined ? "{% url 'get_tatuadores' %}" : "{% url 'get_tatuadores' %}"+username+"/",
+        beforeSend: function(xhr){
+
+        }
+      })
+      .done( function(data){
+        //console.log(data);
+        data.forEach(tatuadorListItem);
+        //$("#tatuador div.list-group").append("<p></p>")
+      })
+      .fail(function(error){
+        //console.log(error);
+      })
+      .always()
+    }
+    
+    function getDesenhistas(username){
+      $.ajax({
+        method: "GET",
+        url: username == undefined ? "{% url 'get_desenhistas' %}" : "{% url 'get_desenhistas' %}"+username+"/",
+        beforeSend: function(xhr){
+
+        }
+      })
+      .done(function(data){
+        data.forEach(desenhistaListItem);
+        //console.log(data)
+      })
+      .fail(function(error){
+        //console.log(error)
+      })
+      .always()
+    }
+
+    function getStudios(param){
+      $.ajax({
+        method: "GET",
+        url: param == undefined ? "{% url 'get_studios' %}" : "{% url 'get_studios' %}"+param+"/",
+        beforeSend: function(xhr){
+
+        }
+      })
+      .done(function(data){
+        data.forEach(studioListItem);
+        //console.log(data)
+      })
+      .fail(function(error){
+        //console.log(error)
+      })
+      .always()
+    }
+
+    // ---------- SEARCH ---------- //
+    function searchTatuadores(){
+      $("#tatuador div.list-group div").remove();
+      if($("#tatuador-search").val() == ""){
+        getTatuadores();
+      }else{
+        getTatuadores($("#tatuador-search").val());
+      }
+    }
+
+    function searchUsuarios(){
+      $("#usuarios div.list-group div").remove();
+      if($("#usuario-search").val() == ""){
+        getUsuarios();
+      }else{
+        getUsuarios($("#usuario-search").val());
+      }
+    }
+
+    function searchDesenhistas(){
+      $("#desenhistas div.list-group div").remove();
+      if($("#desenhista-search").val() == ""){
+        getDesenhistas();
+      }else{
+        getDesenhistas($("#desenhista-search").val());
+      }
+    }
+
+    function searchStudios(){
+      $("#studios div.list-group div").remove();
+      if($("#studio-search").val() == ""){
+        getStudios();
+      }else{
+        getStudios($("#studio-search").val());
+      }
+    }
+
+    // ---------- UTILITARIOS ----------  //
+    function checkImagemPerfil(data){
+      if(data.imagem != null){
+        return "<img class='img rounded-circle' src='"+data.imagem+"' width='60' height='60'>";
+      }else{
+        return "<img class='img rounded-circle' src='{% static 'img/user.png' %}' width='60' height='60'>";
+      }
+    }
+
+    function checkComplemento(data){
+      if(data.complemento != null && data.complemento != "" && data.complemento != "undefined"){
+        return "<p><span>Complemento:</span> "+ data.complemento +"</p>";
+      }else{
+        return "";
+      }
+    }
+
+    function checkPublicacoes(data){
+      if( data.publicacoes.length > 0){
+        var publicacoes = "";
+        var i;
+        for(i=0 ; i < data.publicacoes.length ; i++){
+          //alert(data.publicacoes[i].titulo);
+          publicacoes = publicacoes + "<img class='rounded' src='"+data.publicacoes[i].midia+"' width='50' height='50'>";
+        }
+        return "<div class='m-2'>"+publicacoes+"</div>";
+      }else{
+        return "<p>Nenhuma publicação recente</p>";
+      }
+    }
+
+    // ---------- LISTITEM ---------- //
+    function tatuadorListItem(data){
+      //"<img class='img rounded-circle' src='"+data.imagem+"'  "/*src='{% static 'img/user.png' %}'*/ +" width='60' height='60'>"
+      $("#tatuador div.list-group").append(
+        "<div class='m-1'>" +  
+        "<div class='list-group-item shadow'>"+                                        
+              checkImagemPerfil(data)+
+              "<span class='text-dark ml-1 mt-1' style='font-size: 26px;'>"+
+                  "<strong>"+ data.nome +"</strong>"+
+                  "<button class='btn btn-dark btn-sm float-right mt-3' onclick='tatuadorGridItem("+ data.id +")'><i class='fas fa-plus'></i> <strong>Detalhes</strong> </button>"+
+              "</span>"+       
+          "</div>  "+
+          "<div class='list-group-item shadow' id='tatuador-"+ data.id +"' style='display:none;'>"+
+              "<div class='media-body'>"+
+                  "<p><span>Tatuador:</span> "+ data.nome +" </p>"+
+                  "<p><span>E-mail:</span> "+ data.usuario.email +"</p> "+           
+                  checkPublicacoes(data) +                               
+                  "<a class='btn btn-dark btn-sm' href='/perfil/tatuador/"+ data.usuario.id +"/'><strong> <i class='fas fa-id-badge'></i> Ver perfil</strong> </a> "+
+                  "<button class='btn btn-dark btn-sm btn-orcamento' onclick='gerarPedidoOrcamento("+ data.id +")'> <strong> <i class='fas fa-id-badge'></i> Pedido de Orçamento </strong> </button>  "+                                       
+              "</div> "+
+          "</div>"+
+        "</div>"
+      );
+    }
+
+    function desenhistaListItem(data){
+      $("#desenhistas div.list-group").append(
+        "<div class='m-1'>" +  
+        "<div class='list-group-item shadow'>"+                                        
+              checkImagemPerfil(data)+
+              "<span class='text-dark ml-1 mt-1' style='font-size: 26px;'>"+
+                  "<strong>"+ data.nome +"</strong>"+
+                  "<button class='btn btn-dark btn-sm float-right mt-3' onclick='desenhistaGridItem("+ data.id +")'><i class='fas fa-plus'></i> <strong>Detalhes</strong> </button>"+
+              "</span>"+       
+          "</div>  "+
+          "<div class='list-group-item shadow' id='desenhista-"+ data.id +"' style='display:none;'>"+
+              "<div class='media-body'>"+
+                  "<p><span>Desenhista:</span> "+ data.nome +" </p>"+
+                  "<p><span>E-mail:</span> "+ data.usuario.email +"</p> "+           
+                  checkPublicacoes(data) +                               
+                  "<a class='btn btn-dark btn-sm' href='/perfil/desenhista/"+ data.id +"/'><strong> <i class='fas fa-id-badge'></i> Ver perfil</strong> </a> "+                 
+              "</div> "+
+          "</div>"+
+        "</div>"
+      );
+    }
+
+    function usuarioListItem(data){
+      $("#usuarios div.list-group").append(
+        "<div class='m-1'>" +  
+        "<div class='list-group-item shadow'>"+                                        
+              checkImagemPerfil(data)+
+              "<span class='text-dark ml-1 mt-1' style='font-size: 26px;'>"+
+                  "<strong>"+ data.nome +"</strong>"+
+                  "<button class='btn btn-dark btn-sm float-right mt-3' onclick='usuarioGridItem("+ data.id +")'><i class='fas fa-plus'></i> <strong>Detalhes</strong> </button>"+
+              "</span>"+       
+          "</div>  "+
+          "<div class='list-group-item shadow' id='usuario-"+ data.id +"' style='display:none;'>"+
+              "<div class='media-body'>"+
+                  "<p><span>Usuário:</span> "+ data.nome +" </p>"+
+                  "<p><span>E-mail:</span> "+ data.usuario.email +"</p> "+           
+                  checkPublicacoes(data) +                               
+                  "<a class='btn btn-dark btn-sm' href='/perfil/usuario/"+ data.id +"/'><strong> <i class='fas fa-id-badge'></i> Ver perfil</strong> </a> "+                 
+              "</div> "+
+          "</div>"+
+        "</div>"
+      );
+    }
+
+    function studioListItem(data){
+      $("#studios div.list-group").append(
+        "<div class='m-1'>" +  
+        "<div class='list-group-item shadow'>"+                                        
+              "<span class='text-dark ml-1 mt-1' style='font-size: 26px;'>"+
+                  "<strong>"+ data.cidade +" - "+ data.estado +"</strong>"+
+                  "<button class='btn btn-dark btn-sm float-right mt-2' onclick='studioGridItem("+ data.id +")'><i class='fas fa-plus'></i> <strong>Detalhes</strong> </button>"+
+              "</span>"+       
+          "</div>  "+
+          "<div class='list-group-item shadow' id='studio-"+ data.id +"' style='display:none;'>"+
+              "<div class='media-body'>"+
+                  "<p><span>CEP:</span> "+ data.cep +" </p>"+
+                  "<p><span>Cidade:</span> "+ data.cidade +"</p> "+   
+                  "<p><span>Bairro:</span> "+ data.bairro +"</p> "+
+                  "<p><span>Rua:</span> "+ data.rua + " N° "+ data.numero +"</p> "+
+                  checkComplemento(data)+
+                  "<a class='btn btn-dark btn-sm' href='/perfil/tatuador/"+data.tatuador.id+"/'><strong> <i class='fas fa-id-badge'></i> tatuador</strong> </a> "+                 
+              "</div> "+
+          "</div>"+
+        "</div>"
+      );
+    }
+     
+</script>
+{% endblock %}
+    

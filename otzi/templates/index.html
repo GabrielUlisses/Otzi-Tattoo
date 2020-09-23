@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap4 %}
+
+{% block content %}
+<style>
+    body{
+        background-image: url('../static/img/tatuador.jpg');
+        background-repeat: no-repeat;
+        background-size: 100%;
+        background-position: fixed;
+    }
+</style>
+
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col text-center">
+            {% bootstrap_messages %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2 d-none d-md-block"></div>
+        <div class="col">
+         
+         {% if publicacoes %}
+            {% for p in publicacoes %}            
+                {% include "components/publicacao.html" %}   
+            {% endfor %}
+         {% endif %}
+             
+        </div>
+        <div class="col-2 d-none d-md-block"></div>
+    </div>
+   
+</div>
+{% endblock content %}
+    
+   

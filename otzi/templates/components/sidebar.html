@@ -1,0 +1,56 @@
+{% load static %}
+<nav id="sidebar" class="bg-dark text-white">
+
+    <div id="dismiss">
+        <i class="fas fa-arrow-left"></i>
+    </div>
+
+    <div class="sidebar-header bg-dark">
+       <center> <img class="rounded-circle mr-2" src="{% static 'img/logo.jpg'%}" width="125" height="125"> </center> 
+    </div>
+
+    <ul class="list-unstyled components">
+        <h5 class="text-center"> 
+            <strong>{{ user.username }}</strong>
+        </h5>
+
+        <li style="border-top:solid 1px black;">
+            <a href="{% url 'index' %}" ><strong><i class="fas fa-home" ></i></strong> Principal</a>
+        </li>
+        <li>
+            <a href="{% url 'carregar_pagina_perfil' %}"> <strong><i class="fas fa-user-circle text-seccondary"></i></strong> Perfil</a>
+        </li> 
+        <li>
+            <a href="#publicacaoSubmenu" data-toggle="collapse" aria-expanded="false">
+                <i class="fas fa-newspaper  text-white"></i>
+                Publicações
+                <i class="fas fa-sort-down text-white" style="float: right;"></i>
+            </a>
+            <ul class="collapse list-unstyled" id="publicacaoSubmenu">
+                <li>
+                    <a href="{% url 'publicacoes' %}"><strong><i class="fas fa-clone"></i></strong> Publicações</a>
+                </li>
+                <li>
+                    <a href="{% url 'publicacoes_usuario' %}"><strong><i class="fas fa-clipboard-check"></i></strong> Minhas Publicações</a>
+                </li>
+                <li>
+                    <a href="{% url 'criar_publicacao' %}"><strong><i class="fas fa-plus-square"></i></strong> Criar Publicação</a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="{% url 'notificacoes' %}" ><i class="fas fa-envelope"></i> Notificações</a>
+        </li>
+        <li>
+            <a href="{% url 'galeria' %}" ><strong><i class="fas fa-images"></i></strong> Galeria</a>
+        </li>
+        
+        {% if user.is_staff %}
+            <li>
+                <a href="{% url 'admin:index' %}" ><strong><i class="fas fa-user-lock"></i></strong> Administração</a>
+            </li>
+        {% endif %}
+            
+
+    </ul>
+</nav>

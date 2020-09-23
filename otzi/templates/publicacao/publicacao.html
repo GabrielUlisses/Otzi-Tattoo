@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% load static %}
+{% block content %}
+
+<style>
+    .content{
+        margin-top: 100px;
+        margin-bottom: 100px;
+    }
+    .texto{
+        font-family: "Times New Roman";
+    }
+</style>
+<div class="container content">
+    <div class="row">
+        <div class="col-2"></div>
+        <div class="col">
+            {% if publicacao %}
+
+                {% include "../components/publicacao-detail.html" %}
+
+            {% else %}
+                <h4><strong>Nenhuma publicação foi encontrada.</strong></h4>
+            {% endif %}
+        </div>
+        <div class="col-2"></div>
+    </div>
+</div>
+<script>
+        
+    function aprovar_publicacao(id){
+        $.ajax({
+           method: "GET",
+           url: "http://127.0.0.1:8000/publicacao/api/v1/aprovar/"+id+"/",
+           beforeSend: function( xhr ) {
+           },
+        })
+        .done(function(dados) {
+           //console.log(dados);   
+           $("#btn-aprovar-"+id).remove()
+           $("#publicacao-"+id+" div.button-area").prepend("<button id='btn-desaprovar-"+id+"' class='btn btn-danger float-left mr-1 ml-1' onclick='cancelar_aprovacao("+id+")'><strong><i class='fas fa-ban' style='font-size: 18px;'></i> Desaprovar</strong></button>");
+           $("#nr-aprovacoes-"+id).text(dados.publicacao.nr_aprovacoes);
+        })
+        .fail(function(error) {
+           //console.log("error: " + error);
+        })
+        .always(function() {
+        })
+    }    
+
+    function cancelar_aprovacao(id){
+        $.ajax({
+           method: "GET",
+           url: "http://127.0.0.1:8000/publicacao/api/v1/desaprovar/"+id+"/",
+           beforeSend: function( xhr ) { 
+           },
+        })
+        .done(function(dados) {
+            //console.log(dados);
+            $("#btn-desaprovar-"+id).remove()
+            $("#publicacao-"+id+" div.button-area").prepend("<button id='btn-aprovar-"+id+"' class='btn btn-danger float-left mr-1 ml-1' onclick='aprovar_publicacao("+id+")'><strong><i class='fas fa-heart'></i> Aprovar</strong></button>");
+            $("#nr-aprovacoes-"+id).text(dados.nr_aprovacoes);
+                           
+        })
+        .fail(function(error) {
+           //console.log('error: ' + error);
+        })
+        .always(function() {
+        })
+    }    
+
+    </script>
+{% endblock %}

@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+{% load static %}
+{% block content %}
+
+<div class="container content">
+    <div class="row">
+        <div class="col">
+            {% if messages %}
+            
+
+                {% bootstrap_messages %}
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2 d-none d-md-block">
+            
+        </div>
+        <div class="col">
+            
+            {% for p in publicacoes %}
+                {% include "../components/publicacao.html" %}
+            {% endfor %}                   
+
+        </div>
+        <div class="col-2 d-none d-md-block"></div>
+    </div>
+</div>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-2 d-none d-md-block"></div>
+        <div class="col">           
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center"> 
+                    <!--<li class="page-item ">
+                        <a class="page-link bg-dark text-white border border-secondary" href="?page=1" tabindex="-1"><span aria-hidden="true">início</span> </a>
+                    </li>-->
+                    {% if page_obj.has_previous %}
+                        <li class="page-item ">
+                            <a class="page-link bg-dark text-white border border-secondary" href="?page={{ page_obj.previous_page_number }}" tabindex="-1">
+                                <strong>
+                                    <span aria-hidden="true"><strong>&laquo;</strong></span> <span class="sr-only">Next</span>
+                                </strong>
+                            </a>
+                        </li>               
+                    {% endif %}
+            
+                    <li class="page-item"><a class="page-link bg-dark text-white border-secondary active" href="#">{{ page_obj.number }}</a></li>                 
+            
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link bg-dark text-white border-secondary" href="?page={{ page_obj.next_page_number }}">
+                                <span aria-hidden="true"><strong>&raquo;</strong></span>
+                              <span class="sr-only">Next</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        
+        <div class="col-2 d-none d-md-block"></div>
+    </div>
+</div>
+ 
+{% include "../components/to-top-button.html" %}
+
+<script>
+    const ap_url = "{% url 'aprovar_publicacao' pub_id='x' %}";
+    const des_url = "{% url 'desaprovar_publicacao' pub_id='x' %}";
+
+    function aprovar_publicacao(id){
+        $.ajax({
+           method: "GET",
+           url: ap_url.replace('x/',id+"/"), //"http://127.0.0.1:8000/publicacao/api/v1/aprovar/"+id+"/",
+           beforeSend: function( xhr ) {
+           },
+        })
+        .done(function(dados) {
+           //console.log(dados);   
+           $("#btn-aprovar-"+id).remove()
+           $("#publicacao-"+id+" div.button-area").prepend("<button id='btn-desaprovar-"+id+"' class='btn btn-danger float-left mr-1 ml-1' onclick='cancelar_aprovacao("+id+")'><strong><i class='fas fa-ban' style='font-size: 18px;'></i> Desaprovar</strong></button>");
+           $("#nr-aprovacoes-"+id).text(dados.publicacao.nr_aprovacoes);
+        })
+        .fail(function(error) {
+           //console.log("error: " + error);
+        })
+        .always(function() {
+        })
+    }    
+
+    function cancelar_aprovacao(id){
+        $.ajax({
+           method: "GET",
+           url: des_url.replace('x/',id+"/"),
+           beforeSend: function( xhr ) { 
+           },
+        })
+        .done(function(dados) {
+            console.log(dados);
+            $("#btn-desaprovar-"+id).remove()
+            $("#publicacao-"+id+" div.button-area").prepend("<button id='btn-aprovar-"+id+"' class='btn btn-danger float-left mr-1 ml-1' onclick='aprovar_publicacao("+id+")'><strong><i class='fas fa-heart'></i> Aprovar</strong></button>");
+            $("#nr-aprovacoes-"+id).text(dados.nr_aprovacoes);
+                           
+        })
+        .fail(function(error) {
+           console.log('error: ' + error);
+        })
+        .always(function() {
+        })
+    }    
+
+</script>
+{% endblock %}
+
+{% comment %}
+<ul class="pagination justify-content-center">  						
+    <li class="page-item ">
+      <a class="page-link bg-dark text-white border border-secondary" href="#" tabindex="-1">
+          <strong>
+              <span aria-hidden="true"><strong>&laquo;</strong></span> <span class="sr-only">Next</span>
+          </strong>
+      </a>
+    </li>
+    <li class="page-item"><a class="page-link bg-dark text-white border border-secondary" href="#">1</a></li>
+    <li class="page-item"><a class="page-link bg-dark text-white border-secondary" href="#">2</a></li>
+    <li class="page-item"><a class="page-link bg-dark text-white border-secondary" href="#">3</a></li>
+    <li class="page-item">
+      <a class="page-link bg-dark text-white border-secondary" href="#">
+          <span aria-hidden="true"><strong>&raquo;</strong></span>
+        <span class="sr-only">Next</span>
+      </a>
+    </li>
+  </ul>
+{% endcomment %}

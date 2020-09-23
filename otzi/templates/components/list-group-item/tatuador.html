@@ -1,0 +1,33 @@
+{% load static %}
+<div class="m-1">   
+    
+    <div class="list-group-item shadow">                                        
+        <img class="img rounded-circle" {% if obj.usuario.imagem.thumbnail.url %} src="  {{obj.usuario.imagem.thumbnail.url}}"{% else %} src="{% static 'img/user.png' %}" {% endif %} width="60" height="60">
+        <span class="text-dark ml-1 mt-1" style="font-size: 26px;">
+            <strong>{{obj.usuario.nome}}</strong>
+            <button class="btn btn-dark btn-sm float-right mt-3" onclick="tatuadorGridItem({{obj.usuario.tatuador.id}})"><i class="fas fa-plus"></i> <strong>Detalhes</strong> </button>
+        </span>       
+    </div>
+
+    <div class="list-group-item shadow" id="tatuador-{{obj.usuario.tatuador.id}}" style="display:none;">
+        <div class="media-body">
+            <p><span>Tatuador</span> {{obj.usuario.nome}} </p>
+            <p><span>Email</span> {{obj.usuario.usuario.email}} </p>   
+            
+            {% if obj.publicacoes %}
+                <p>Ultimas Publicações</p>   
+                <div class="m-2">
+                    {% for p in obj.publicacoes %}
+                    <img class="rounded" src="{{p.midia.thumbnail.url}}" width="50" height="50">
+                    {% endfor %}    
+                </div>
+            {% else %}
+            <p>Nenhuma publicacao.</p>
+            {% endif %}                      
+           
+            <a class="btn btn-dark btn-sm" href="{% url 'ver_perfil_tatuador' pk=obj.usuario.id %}"><strong> <i class="fas fa-id-badge"></i> Ver perfil</strong> </a> 
+            <button class="btn btn-dark btn-sm btn-orcamento" onclick="gerarPedidoOrcamento({{obj.usuario.id}})"> <strong> <i class="fas fa-id-badge"></i> Pedido de Orçamento </strong> </button>                                         
+        </div> 
+    </div>
+</div>
+

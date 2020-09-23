@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    #chat-log{
+        display: flex;
+        flex-direction: column;
+    }
+    #chat-log div .float-left{
+        border-radius: 0px 10px 10px 10px;
+    }
+    #chat-log div .float-right{
+        border-radius: 10px 0px 10px 10px;
+    }
+    #chat-log div span{
+        max-width: 200px;
+        padding: 4px;
+        background-color: rgb(238, 238, 238);
+        margin-top: 2px;
+        margin-bottom: 2px;
+    }
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-2 d-none d-md-block"></div>
+        <div class="col">
+            <h6 class="badge badge-success">{{user.username}}</h6> - <h6 class="badge badge-info">{{user_conn.username}}</h6>
+            
+            <div class="card">
+                <div id="chat-log" class="card-body" style="height: 250px; overflow-y: scroll;">
+
+                </div>
+            </div><br>
+            <div class="input-group">
+                <input id="chat-message-input" class="form-control" placeholder="Sua mensagem" type="text" size="100">
+                <div class="input-group-append">
+                    
+                    <button id="chat-message-submit" class="btn btn-sm btn-success"> 
+                        <strong>  ENVIAR <i class="fas fa-arrow-circle-right"></i> </strong> 
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-2 d-none d-md-block"></div>
+    </div>
+</div>
+<footer>
+    {{ room_name|json_script:"room-name" }}
+<script>
+    const roomName = JSON.parse(document.getElementById('room-name').textContent);
+
+    const chatSocket = new WebSocket(
+        'ws://'+ window.location.host + '/ws/chat/' + roomName + '/'
+    );
+
+    function addFetchedMessages(data){
+        data.messages.forEach(element => {
+            if (element.author == "{{user.username}}"){
+                var text = "<div><span class='text-success float-right'><strong>"+element.message+"</strong></span></div>";
+                $("#chat-log").append(text);     
+            }else{
+                var text = "<div ><span class='text-info float-left'><strong>"+element.author+": "+element.message+"</strong></span></div>";
+                $("#chat-log").append(text);
+            }                    
+        });
+        $("#chat-log").scrollTop($("#chat-log")[0].scrollHeight);
+    }
+
+    function addChatMessages(data){
+        if (data.author == "{{user.username}}"){
+            var text = "<div><span class='text-success float-right'><strong>"+data.message+"</strong></span></div>";
+            $("#chat-log").append(text);     
+        }else{
+            var text = "<div><span class='text-info float-left'><strong>"+data.author+": "+data.message+"</strong></span></div>";
+            $("#chat-log").append(text);
+        }
+        $("#chat-log").scrollTop($("#chat-log")[0].scrollHeight);
+    }
+
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        if (data.fetched == true){
+            addFetchedMessages(data);
+        }else{
+            addChatMessages(data);
+        }
+    };
+
+    chatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+    chatSocket.onopen = function(e) {
+        chatSocket.send(JSON.stringify({
+            'command': "fetch_messages",
+            'author': "{{request.user.username}}",
+            'to': "{{user_conn.username}}",
+        }));
+    }
+
+    document.querySelector('#chat-message-input').focus();
+    document.querySelector('#chat-message-input').onkeyup = function(e) {
+        if (e.keyCode === 13) {  // enter, return
+            document.querySelector('#chat-message-submit').click();
+        }
+    };
+
+    document.querySelector('#chat-message-submit').onclick = function(e) {
+        const messageInputDom = document.querySelector('#chat-message-input');
+        const message = messageInputDom.value;
+        chatSocket.send(JSON.stringify({
+            'message': message,
+            'author': "{{request.user.username}}",
+            'to': "{{user_conn.username}}",
+        }));
+        messageInputDom.value = '';
+    };
+</script>
+</footer>
+{% endblock %}

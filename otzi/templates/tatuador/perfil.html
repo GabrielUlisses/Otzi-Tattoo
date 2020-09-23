@@ -1,0 +1,654 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+  <style>
+    .btn{
+      margin: 1px;
+    }
+  </style>
+  <div class="container">
+      <div class="row mb-5">
+          <div class="col">        
+              <ul class="nav nav-tabs">
+                <li class="nav-item"> <a href="" class="active nav-link" data-toggle="pill" data-target="#v-pills-pessoal"><i class="fa fa-user"></i> Pessoal</a> </li>
+                <li class="nav-item"> <a class="nav-link" href="" data-toggle="pill" data-target="#v-pills-profile"><i class="fas fa-portrait"></i> Sobre mim</a> </li>
+                <li class="nav-item"> <a href="" class="nav-link" data-toggle="pill" data-target="#v-pills-agenda"><i class="fas fa-calendar"></i> Agenda</a> </li>
+                <li class="nav-item"> <a href="" class="nav-link" data-toggle="pill" data-target="#v-pills-publicacoes"><i class="fas fa-book"></i> Publicações</a> </li>
+                <li class="nav-item"> <a href="" class="nav-link" data-toggle="pill" data-target="#v-pills-certificados"><i class="fas fa-certificate"></i> Certificados</a> </li>
+                <li class="nav-item"> <a href="" class="nav-link" data-toggle="pill" data-target="#v-pills-studio"><i class="fas fa-map-marker-alt"></i> Studio</a> </li>
+              </ul>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col">
+            {% bootstrap_messages %}
+            <div class="tab-content" id="v-pills-tabContent">
+              
+              <!-- Dados Pessoais -->
+              <div class="tab-pane fade show active" id="v-pills-pessoal" role="tabpanel" aria-labelledby="v-pills-pessoal-tab">
+                Deseja alterar alguma informação? <a class="btn btn-dark text-white btn-sm m-2"> <i class="fas fa-edit"></i>  Editar</a>
+                <table class="table table-hover responsive w-100">               
+                  <tbody>
+                    <tr>
+                      <td>Nome: </td>
+                      <td colspan="2">{{esp.nome}}</td>
+                    </tr>
+                    <tr>
+                      <td>Número de Celular: </td>
+                      <td colspan="2">{{esp.celular}}</td>
+                    </tr>
+                    <tr>
+                      <td>Número do CPF: </td>
+                      <td colspan="2">{{esp.cpf}}</td>
+                    </tr>
+                    <tr>
+                      <td>Número de Telefone:. </td>
+                      <td colspan="2">{{tatuador.telefone}}</td>
+                    </tr>
+                    <tr>
+                      <td>Número do CNPJ: </td>
+                      <td colspan="2">{{tatuador.cnpj}}</td>
+                    </tr>                   
+                    <tr>
+                      <td>Número do Alvará: </td>
+                      <td colspan="2">{{tatuador.alvara}}</td>
+                    </tr>                           
+                  </tbody>
+                </table>
+                
+              </div>
+
+              <!-- Página do Tatuador -->
+              <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                
+                {% if bio %}
+                  <!-- BIOGRAFIA -->
+                  <div id="bio">
+                      <button id="bio-button" class="btn btn-dark text-white float-right"> <i class="fas fa-edit"></i>  Editar Bio</button>
+                      <center><h6>{{esp.nome}}</h6></center>
+                      <br>
+                      <h6>Apresentação</h6>
+                      <p>  {{bio.apresentacao}}</p>
+                      <br>
+                      <h6>Trajetória</h6>
+                      <p>  {{bio.conteudo}}</p>            
+                  </div>
+
+                  <!-- FORMULARIO -->
+                  <div id="bio-form" style="display:none;">
+                      <button id="bio-close" class="btn btn-danger float-right"> <i class="fas fa-times-circle text-white"></i> Cancelar</button>
+                      <br>
+                      <form action="{% url 'editar_bio' %}" method="POST">
+                          {% csrf_token %}
+                          {% bootstrap_form bio_form %}                        
+                          <button class="btn btn-dark text-white btn-block" type="submit"> <i class="fas fa-save"></i>  Salvar Alterações </button>
+                      </form>
+                  </div>
+
+                {% else %}
+                  <p>Nenhuma Bio registrada, deseja adicionar uma? <a id="bio-add" class="btn btn-dark text-white"><i class="fas fa-plus text-white"></i> Adicionar </a></p>
+                  
+                  <div id="formulario_biografia" class="" style="display:none;">
+                    
+                    {% if bio_form %}
+                      <form action="{% url 'perfil_tatuador' %}" method="POST">
+                        {% csrf_token %}
+                        {% bootstrap_form bio_form %}
+                        <input type="hidden" value="bio" name="registro">
+                        <button class="btn btn-dark text-white btn-block" type="submit"> <i class="fas fa-save"></i>  Registrar </button>
+                      </form>
+                    {% endif %}
+                      
+                  </div>
+                {% endif %}
+                
+              </div>
+
+              <!-- Agenda -->
+              <div class="tab-pane fade" id="v-pills-agenda" role="tabpanel" aria-labelledby="v-pills-agenda-tab">
+                
+                {% if agenda %}
+
+                  <!--    SEGUNDA    -->               
+                      {% if configuracao_agenda.segunda %}
+                          <div class="card d-inline-flex border border-dark" >
+                              <div class="card-header bg-dark"><center><strong><h6 class="text-white">Segunda</h6></strong></center></div>
+                              <div class="card-body">
+                                  <p><span>Das </span>{{configuracao_agenda.segunda.horario_inicio}} <span>Até </span>{{configuracao_agenda.segunda.horario_inicio_almoco}}</p>
+                                  <p><span>Das </span>{{configuracao_agenda.segunda.horario_termino_almoco}} <span>Até </span>{{configuracao_agenda.segunda.horario_termino}}</p>
+                        
+                                  <form method="POST" action="{% url 'request_editar_configuracao' %}">
+                                      <input type="hidden" name="id_configuracao_agenda" value="{{configuracao_agenda.segunda.id}}">
+                                      {% csrf_token %}
+                                      <p><button class="btn btn-outline-dark btn-block" type="submit" ><i class="fas fa-edit"></i> Editar </button></p>
+                        
+                                  </form>                     
+                              </div>
+                          </div>
+                      {% else %}
+                          <div class="card d-inline-flex border border-dark" >
+                              <div class="card-header bg-dark"><center><strong><h6 class="text-white">Segunda</h6></strong></center></div>
+                              <div class="card-body">      
+                                  <p>Não Configurada</p>   
+                                  <p><br></p>                       
+                                  <form method="POST" action="{% url 'request_configurar_dia_agenda' %}">
+                                      {% csrf_token %}
+                                      <input type="hidden" name="agenda_id" value="{{agenda.id}}">
+                                      <input type="hidden" name="dia" value="segunda">
+                                      <p>
+                                          <button class="btn btn-outline-dark btn-block" type="submit" > 
+                                            <i class="fas fa-cog"></i> Configurar 
+                                          </button>
+                                      </p>
+                                  </form>       
+                                        
+                              </div>
+                          </div>
+                      {% endif %}
+                  
+                  <!--    TERÇA    -->
+                    {% if configuracao_agenda.terca %}
+                        <div class="card d-inline-flex border border-dark" >
+                            <div class="card-header bg-dark"><center><strong><h6 class="text-white">Terça</h6></strong></center></div>
+                            <div class="card-body">
+                                <p><span>Das </span>{{configuracao_agenda.terca.horario_inicio}} <span>Até </span>{{configuracao_agenda.terca.horario_inicio_almoco}}</p>
+                                <p><span>Das </span>{{configuracao_agenda.terca.horario_termino_almoco}} <span>Até </span>{{configuracao_agenda.terca.horario_termino}}</p>
+                      
+                                <form method="POST" action="{% url 'request_editar_configuracao' %}">
+                                    <input type="hidden" name="id_configuracao_agenda" value="{{configuracao_agenda.terca.id}}">
+                                    {% csrf_token %}
+                                    <p><button class="btn btn-outline-dark btn-block" type="submit" ><i class="fas fa-edit"></i> Editar </button></p>
+                      
+                                </form>                     
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="card d-inline-flex border border-dark" >
+                            <div class="card-header bg-dark"><center><strong><h6 class="text-white">Terça</h6></strong></center></div>
+                            <div class="card-body">      
+                                <p>Não Configurada</p>     
+                                <p><br></p>                     
+                                <form method="POST" action="{% url 'request_configurar_dia_agenda' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="agenda_id" value="{{agenda.id}}">
+                                    <input type="hidden" name="dia" value="terca">
+                                    <p>
+                                        <button class="btn btn-outline-dark btn-block" type="submit" > 
+                                          <i class="fas fa-cog"></i> Configurar 
+                                        </button>
+                                    </p>
+                                </form>       
+                                      
+                            </div>
+                        </div>
+                    {% endif %}
+
+                  <!--    QUARTA    -->
+                    {% if configuracao_agenda.quarta %}
+                        <div class="card d-inline-flex border border-dark" >
+                            <div class="card-header bg-dark"><center><strong><h6 class="text-white">Quarta</h6></strong></center></div>
+                            <div class="card-body">
+                                <p><span>Das </span>{{configuracao_agenda.quarta.horario_inicio}} <span>Até </span>{{configuracao_agenda.quarta.horario_inicio_almoco}}</p>
+                                <p><span>Das </span>{{configuracao_agenda.quarta.horario_termino_almoco}} <span>Até </span>{{configuracao_agenda.quarta.horario_termino}}</p>
+                      
+                                <form method="POST" action="{% url 'request_editar_configuracao' %}">
+                                    <input type="hidden" name="id_configuracao_agenda" value="{{configuracao_agenda.quarta.id}}">
+                                    {% csrf_token %}
+                                    <p><button class="btn btn-outline-dark btn-block" type="submit" ><i class="fas fa-edit"></i> Editar </button></p>
+                      
+                                </form>                     
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="card d-inline-flex border border-dark" >
+                            <div class="card-header bg-dark"><center><strong><h6 class="text-white">Quarta</h6></strong></center></div>
+                            <div class="card-body">      
+                                <p>Não Configurada</p>     
+                                <p><br></p>                     
+                                <form method="POST" action="{% url 'request_configurar_dia_agenda' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="agenda_id" value="{{agenda.id}}">
+                                    <input type="hidden" name="dia" value="quarta">
+                                    <p>
+                                        <button class="btn btn-outline-dark btn-block" type="submit" > 
+                                          <i class="fas fa-cog"></i> Configurar 
+                                        </button>
+                                    </p>
+                                </form>       
+                                      
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <!--    QUINTA    -->
+                    {% if configuracao_agenda.quinta %}
+                        <div class="card d-inline-flex border border-dark" >
+                            <div class="card-header bg-dark"><center><strong><h6 class="text-white">Quinta</h6></strong></center></div>
+                            <div class="card-body">
+                                <p><span>Das </span>{{configuracao_agenda.quinta.horario_inicio}} <span>Até </span>{{configuracao_agenda.quinta.horario_inicio_almoco}}</p>
+                                <p><span>Das </span>{{configuracao_agenda.quinta.horario_termino_almoco}} <span>Até </span>{{configuracao_agenda.quinta.horario_termino}}</p>
+                      
+                                <form method="POST" action="{% url 'request_editar_configuracao' %}">
+                                    <input type="hidden" name="id_configuracao_agenda" value="{{configuracao_agenda.quinta.id}}">
+                                    {% csrf_token %}
+                                    <p><button class="btn btn-outline-dark btn-block" type="submit" ><i class="fas fa-edit"></i> Editar </button></p>
+                      
+                                </form>                     
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="card d-inline-flex border border-dark" >
+                            <div class="card-header bg-dark"><center><strong><h6 class="text-white">Quinta</h6></strong></center></div>
+                            <div class="card-body">      
+                                <p>Não Configurada</p>     
+                                <p><br></p>                     
+                                <form method="POST" action="{% url 'request_configurar_dia_agenda' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="agenda_id" value="{{agenda.id}}">
+                                    <input type="hidden" name="dia" value="quinta">
+                                    <p>
+                                        <button class="btn btn-outline-dark btn-block" type="submit" > 
+                                          <i class="fas fa-cog"></i> Configurar 
+                                        </button>
+                                    </p>
+                                </form>       
+                                      
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <!--    SEXTA    -->
+                    {% if configuracao_agenda.sexta %}
+                        <div class="card d-inline-flex border border-dark" >
+                            <div class="card-header bg-dark"><center><strong><h6 class="text-white">Sexta</h6></strong></center></div>
+                            <div class="card-body">
+                                <p><span>Das </span>{{configuracao_agenda.sexta.horario_inicio}} <span>Até </span>{{configuracao_agenda.sexta.horario_inicio_almoco}}</p>
+                                <p><span>Das </span>{{configuracao_agenda.sexta.horario_termino_almoco}} <span>Até </span>{{configuracao_agenda.sexta.horario_termino}}</p>
+                      
+                                <form method="POST" action="{% url 'request_editar_configuracao' %}">
+                                    <input type="hidden" name="id_configuracao_agenda" value="{{configuracao_agenda.sexta.id}}">
+                                    {% csrf_token %}
+                                    <p><button class="btn btn-outline-dark btn-block" type="submit" ><i class="fas fa-edit"></i> Editar </button></p>
+                      
+                                </form>                     
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="card d-inline-flex border border-dark" >
+                            <div class="card-header bg-dark"><center><strong><h6 class="text-white">Sexta</h6></strong></center></div>
+                            <div class="card-body">      
+                                <p>Não Configurada</p>     
+                                <p><br></p>                     
+                                <form method="POST" action="{% url 'request_configurar_dia_agenda' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="agenda_id" value="{{agenda.id}}">
+                                    <input type="hidden" name="dia" value="sexta">
+                                    <p>
+                                        <button class="btn btn-outline-dark btn-block" type="submit" > 
+                                          <i class="fas fa-cog"></i> Configurar 
+                                        </button>
+                                    </p>
+                                </form>       
+                                      
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <!--    Sábado    -->
+                    {% if configuracao_agenda.sabado %}
+                        <div class="card d-inline-flex border border-dark" >
+                            <div class="card-header bg-dark"><center><strong><h6 class="text-white">Sábado</h6></strong></center></div>
+                            <div class="card-body">
+                                <p><span>Das </span>{{configuracao_agenda.sabado.horario_inicio}} <span>Até </span>{{configuracao_agenda.sabado.horario_inicio_almoco}}</p>
+                                <p><span>Das </span>{{configuracao_agenda.sabado.horario_termino_almoco}} <span>Até </span>{{configuracao_agenda.sabado.horario_termino}}</p>
+                      
+                                <form method="POST" action="{% url 'request_editar_configuracao' %}">
+                                    <input type="hidden" name="id_configuracao_agenda" value="{{configuracao_agenda.sabado.id}}">
+                                    {% csrf_token %}
+                                    <p><button class="btn btn-outline-dark btn-block" type="submit" ><i class="fas fa-edit"></i> Editar </button></p>
+                      
+                                </form>                     
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="card d-inline-flex border border-dark" >
+                            <div class="card-header bg-dark"><center><strong><h6 class="text-white">Sábado</h6></strong></center></div>
+                            <div class="card-body">      
+                                <p>Não Configurada</p>     
+                                <p><br></p>                     
+                                <form method="POST" action="{% url 'request_configurar_dia_agenda' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="agenda_id" value="{{agenda.id}}">
+                                    <input type="hidden" name="dia" value="sabado">
+                                    <p>
+                                        <button class="btn btn-outline-dark btn-block" type="submit" > 
+                                          <i class="fas fa-cog"></i> Configurar 
+                                        </button>
+                                    </p>
+                                </form>       
+                                      
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <!--    DOMINGO    -->
+                    {% if configuracao_agenda.domingo %}
+                        <div class="card d-inline-flex border border-dark" >
+                            <div class="card-header bg-dark"><center><strong><h6 class="text-white">Domingo</h6></strong></center></div>
+                            <div class="card-body">
+                                <p><span>Das </span>{{configuracao_agenda.domingo.horario_inicio}} <span>Até </span>{{configuracao_agenda.domingo.horario_inicio_almoco}}</p>
+                                <p><span>Das </span>{{configuracao_agenda.domingo.horario_termino_almoco}} <span>Até </span>{{configuracao_agenda.domingo.horario_termino}}</p>
+                      
+                                <form method="POST" action="{% url 'request_editar_configuracao' %}">
+                                    <input type="hidden" name="id_configuracao_agenda" value="{{configuracao_agenda.domingo.id}}">
+                                    {% csrf_token %}
+                                    <p><button class="btn btn-outline-dark btn-block" type="submit" ><i class="fas fa-edit"></i> Editar </button></p>
+                      
+                                </form>                     
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="card d-inline-flex border border-dark" >
+                            <div class="card-header bg-dark"><center><strong><h6 class="text-white">Domingo</h6></strong></center></div>
+                            <div class="card-body">      
+                                <p>Não Configurada</p>     
+                                <p><br></p>                     
+                                <form method="POST" action="{% url 'request_configurar_dia_agenda' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="agenda_id" value="{{agenda.id}}">
+                                    <input type="hidden" name="dia" value="domingo">
+                                    <p>
+                                        <button class="btn btn-outline-dark btn-block" type="submit" > 
+                                          <i class="fas fa-cog"></i> Configurar 
+                                        </button>
+                                    </p>
+                                </form>       
+                                      
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <!--    Feriados Religiosos    -->
+                    {% if configuracao_agenda.feriado_religioso %}
+                        <div class="card d-inline-flex border border-dark" >
+                            <div class="card-header bg-dark"><center><strong><h6 class="text-white">Feriado Religioso</h6></strong></center></div>
+                            <div class="card-body">
+                                <p><span>Das </span>{{configuracao_agenda.feriado_religioso.horario_inicio}} <span>Até </span>{{configuracao_agenda.feriado_religioso.horario_inicio_almoco}}</p>
+                                <p><span>Das </span>{{configuracao_agenda.feriado_religioso.horario_termino_almoco}} <span>Até </span>{{configuracao_agenda.feriado_religioso.horario_termino}}</p>
+                      
+                                <form method="POST" action="{% url 'request_editar_configuracao' %}">
+                                    <input type="hidden" name="id_configuracao_agenda" value="{{configuracao_agenda.feriado_religioso.id}}">
+                                    {% csrf_token %}
+                                    <p><button class="btn btn-outline-dark btn-block" type="submit" ><i class="fas fa-edit"></i> Editar </button></p>
+                      
+                                </form>                     
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="card d-inline-flex border border-dark" >
+                            <div class="card-header bg-dark"><center><strong><h6 class="text-white">Feriado Religioso</h6></strong></center></div>
+                            <div class="card-body">      
+                                <p>Não Configurada</p>     
+                                <p><br></p>                     
+                                <form method="POST" action="{% url 'request_configurar_dia_agenda' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="agenda_id" value="{{agenda.id}}">
+                                    <input type="hidden" name="dia" value="feriado_religioso">
+                                    <p>
+                                        <button class="btn btn-outline-dark btn-block" type="submit" > 
+                                          <i class="fas fa-cog"></i> Configurar 
+                                        </button>
+                                    </p>
+                                </form>       
+                                      
+                            </div>
+                        </div>
+                    {% endif %}             
+
+                {% endif %}
+                  
+              </div>
+              
+              <!-- Publicações -->
+              <div class="tab-pane fade" id="v-pills-publicacoes" role="tabpanel" aria-labelledby="v-pills-publicacoes-tab">
+                <center>
+                {% for p in publicacoes %}
+                  <div class="card publicacao" style="margin-top: 20px; max-width: 600px;">
+                    <div class="card-header bg-dark" >
+                        <h5 class="card-title texto">
+                            <strong><center>
+                                <a class="text-white" href="{% url 'visualizar_publicacao' pk=p.pk %}">{{p.titulo}}</a>
+                            </center></strong>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <img class="card-img img-thumbnail rounded" src="{{p.midia.thumbnail.url}}" width="200" heigth="200">
+                    </div>
+                    <div class="card-footer bg-dark">
+
+                      {% if p.conteudo %}                       
+                        <textarea class="form-control mb-3 bg-white" readonly>{{p.conteudo}}</textarea>
+                      {% endif %}
+
+                        <a href="{% url 'editar_publicacao' pk=p.id %}" class="btn btn-primary text-white float-left"><i class="fas fa-edit"></i></a>
+                        
+                        {% if p.nr_aprovacoes == 1 %}
+                            <button class="btn btn-danger float-left">{{p.nr_aprovacoes}} <i class="fas fa-heart"></i></button>
+                        {% elif p.nr_aprovacoes == None %}
+                            <button class="btn btn-danger text-white float-left">0 <i class="fas fa-frown"></i> </button>
+                        {% else %}
+                            <button class="btn btn-danger float-left">{{p.nr_aprovacoes}} <i class="fas fa-heart"></i> </button>
+                        {% endif %}
+                                            
+                    </div>
+                  </div>
+                {% endfor %}
+                </center>
+              </div>
+              
+              <!-- Certificados -->
+              <div class="tab-pane fade" id="v-pills-certificados" role="tabpanel" aria-labelledby="v-pills-certificados-tab">
+                
+                <span>Deseja adicionar uma nova certificação? <a id="certificacao-add" class="btn btn-dark text-white btn-sm"><i class="fas fa-plus text-white"></i> Adicionar </a></p></span>
+                <br>
+
+                <div class="card-body" id="formulario_certificacao" style="display:none;">
+                  <button id="certificacao-close" class="btn btn-danger float-right"> <i class="fas fa-times-circle text-white"></i></button>
+                  <br>
+                  <form action="{% url 'perfil_tatuador' %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% bootstrap_form certificacao_form %}
+                    <input type="hidden" value="certificacao" name="registro">
+                    <input class="btn btn-dark btn-block" type="submit" value="Registrar">
+                  </form>
+                </div>
+
+                <br>
+                <div id="certificados">
+
+                  {% if certificados %}
+                      {% for o in certificados %}                        
+                          {% if o.certificado.ativo == True %}
+
+                            <!-- CERTIFICADO -->
+                            <div class="card">                                                                              
+                              <div class="card-body">
+                                <h5>
+                                  <span class="text-left text-dark font-weight-bold">{{o.certificado.titulo}}</span> 
+                                  <span class="float-right text-muted small">{{o.certificado.data}}</span>
+                                </h5>
+                                <p>{{o.certificado.descricao}}</p>
+                                <p>
+
+                                  <button type="button" class="btn btn-danger text-white float-right" data-toggle="modal" data-target="#modal-exclusao-certificado-{{o.certificado.id}}">
+                                    <i class="fas fa-trash-alt"></i>Remover
+                                  </button>
+          
+                                  <button id="{{o.certificado.id}}" class="btn btn-primary text-white float-right" type="submit" name="btn-edit-certificado">
+                                    <i class="fas fa-edit"></i>
+                                  </button>                            
+
+                                </p>
+                              </div>
+                            </div>
+
+                            <!-- EXCLUIR CERTIFICADO -->
+                            <div class="modal fade" id="modal-exclusao-certificado-{{o.certificado.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+                              <div class="modal-dialog modal-dialog-scrollable" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalScrollableTitle">Deseja realmente remover este Certificado?</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Cancelar">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body">
+                                    Um certificado removido não poderá ser recuperado novamente.
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                    <form method="POST" action="{% url 'remover_certificado' %}">
+                                      {% csrf_token %}
+                                      <input type="hidden" name="certificado_id" value="{{o.certificado.id}}">
+                                      <button class="btn btn-danger text-white float-right" type="submit"><i class="fas fa-trash-alt"></i>Sim Remover</button>
+                                    </form>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                         
+                            <!-- FORMULARIO -->
+                            <div class="card bg-muted" id="certificado-form-{{o.certificado.id}}" style="display:none;">                                                                              
+                              <div class="card-body">   
+                                  <button id="{{o.certificado.id}}" name="btn-certificado-form-close" class="btn btn-danger float-right mb-3"> 
+                                      <i class="fas fa-times-circle text-white"></i> Cancelar
+                                  </button>                                      
+                                  <form method="POST" action="{% url 'editar_certificado' %}">                      
+                                      {% csrf_token %}
+                                      {% bootstrap_form o.formulario %}
+                                      <input type="hidden" name="certificado_id" value="{{o.certificado.id}}">
+                                      <button class="btn btn-dark text-white btn-block" type="submit"> <i class="fas fa-save"></i>  Salvar Alterações </button>
+                                  </form>
+    
+                                </p>
+                              </div>
+                            </div>
+                                                    
+                          {% endif %}
+
+                      {% endfor %}   
+                      
+                      <br><br><br><br>
+                  {% else %}
+                    <p class="text-muted ">Nenhum certificado registrado até o momento.</p>
+                  {% endif %}
+                             
+                </div>                              
+              </div>
+
+              <!-- Stúdio -->
+              <div class="tab-pane fade" id="v-pills-studio" role="tabpanel" aria-labelledby="v-pills-studio-tab">
+                  <div id="endereco">
+                      <div class="col-md-12" >
+                          <iframe width="100%" height="400" src="https://maps.google.com/maps?q=New%20York&amp;z=14&amp;output=embed" scrolling="no" frameborder="0"></iframe>
+                      </div>
+                      <table class="table table-hover responsive w-100">
+                          <thead></thead>
+                          <tbody>
+                            <tr>
+                              <td>Estado: </td>
+                              <td >{{tatuador.endereco.estado}}</td>
+                            </tr>
+                            <tr>
+                              <td>Cidade: </td>
+                              <td >{{tatuador.endereco.cidade}}</td>
+                            </tr>
+                            <tr>
+                              <td>Bairro: </td>
+                              <td >{{tatuador.endereco.bairro}}</td>
+                            </tr>
+                            <tr>
+                              <td>Rua: </td>
+                              <td >{{tatuador.endereco.rua}}</td>
+                            </tr>
+                            <tr>
+                              <td>Número: </td>
+                              <td >{{tatuador.endereco.numero}}</td>
+                            </tr>
+                            <tr>
+                              <td>Complemento: </td>
+                              <td >{{tatuador.endereco.complemento}}</td>
+                            </tr>
+                            <tr>                
+                              <td colspan="2"> 
+                                <button id="editar-endereco" class="btn btn-dark text-white" > <i class="fas fa-edit"></i>  Editar Dados</a>
+                              </td>
+                            </tr>
+                          </tbody>
+                      </table>
+                  </div>
+                  <div id="endereco-form" style="display:none;">
+                      <button id="btn-endereco-form-close" class="btn btn-danger float-right mb-3"> 
+                          <i class="fas fa-times-circle text-white"></i> Cancelar
+                      </button> 
+                      <form  method="POST" action="">
+                          {% csrf_token %}                          
+                          {% bootstrap_form endereco_form %}
+                          <input type="hidden" name="endereco_id" value="{{tatuador.endereco.id}}">
+                          <button class="btn btn-dark btn-block">
+                            <i class="fas fa-save"> </i> Salvar Alterações
+                          </button>
+                      </form>
+                  </div>
+              </div>
+
+            </div>
+          </div>
+      </div>
+  </div>
+  </div>
+  {% bootstrap_javascript jquery="full" %}
+  <script>
+
+    // ----- CERTIFICADO ----- //
+    $("button[name='btn-edit-certificado']").click(function(){
+      var id = $(this).attr("id");
+      $("#certificado-form-"+id).toggle();
+    });
+    $("button[name='btn-certificado-form-close']").click(function(){
+      var id = $(this).attr("id");
+      $("#certificado-form-"+id).hide();
+    });
+    $("#certificacao-add").click(function(){
+        $("#formulario_certificacao").toggle();
+    });
+    $("#certificacao-close").click(function(){
+        $("#formulario_certificacao").hide();
+    });
+
+    // ----- ENDEREÇO ----- //
+    $("#editar-endereco").click(function(){
+        $("#endereco").hide();
+        $("#endereco-form").show();
+    });
+    $("#btn-endereco-form-close").click(function(){  
+        $("#endereco-form").hide();
+        $("#endereco").show();
+    });
+
+    // ----- BIOGRAFIA ----- //
+    $("#bio-add").click(function(){
+        $("#formulario_biografia").show();
+    });
+    $("#bio-button").click(function() {
+      $("#bio").hide();
+      $("#bio-form").show();
+    });
+    $("#bio-close").click(function(){
+      $("#bio-form").hide();
+      $("#bio").show();   
+    });
+
+  </script>
+{% endblock %}

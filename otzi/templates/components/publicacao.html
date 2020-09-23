@@ -1,0 +1,56 @@
+
+{% load static %}
+<center>
+<div id="publicacao-{{p.publicacao.id}}" class="card publicacao" style="margin-top: 20px; max-width: 600px; border: 0px;">
+
+    <div class="card-header bg-dark" >
+        <h5 class="card-title texto">
+            <strong>
+                <center>
+                    <a class="text-white" href="{% url 'visualizar_publicacao' pk=p.publicacao.pk %}">{{p.publicacao.titulo}}</a>
+                </center>
+            </strong>
+            <span style="font-size: 12px;" class="text-light float-right m-0">{{p.publicacao.data_criacao}}</span>
+        </h5>  
+    </div>
+
+    <div class="card-body">
+            <img  src='{{p.publicacao.midia.thumbnail.url}}' class="img card-img rounded"  >    
+    </div>
+
+    <div class="card-footer bg-dark">
+        {% if p.publicacao.conteudo %}                       
+            <textarea class="form-control mb-3 bg-white" readonly>{{p.publicacao.conteudo}}</textarea>
+        {% endif %}
+
+        {% if p.publicacao.publicante == request.user %}
+            <a href="{% url 'editar_publicacao' pk=p.publicacao.id %}" class="btn btn-danger text-white float-left"><strong><i class="fas fa-edit"></i></strong></a>
+        {% else %}
+            
+            <div class="button-area">
+                {% if not p.aprovacao %}
+                    <button id="btn-aprovar-{{p.publicacao.id}}" class="btn btn-danger float-left mr-1 ml-1" onclick="aprovar_publicacao({{p.publicacao.id}})"><strong><i class="fas fa-heart"></i> Aprovar</strong></button>
+                {% else %}
+                    <button id="btn-desaprovar-{{p.publicacao.id}}" class="btn btn-danger float-left mr-1 ml-1" onclick="cancelar_aprovacao({{p.publicacao.id}})"><strong><i class="fas fa-ban" style="font-size: 18px;"></i> Desaprovar</strong></button>
+                {% endif %}
+            </div>
+                
+        {% endif %}
+    
+        
+        <button  class="btn btn-danger float-left ml-1"> <strong><span id="nr-aprovacoes-{{p.publicacao.id}}">{{p.publicacao.nr_aprovacoes}}</span> <i class="fas fa-heart"></i></strong> </button>
+        
+        {% if p.publicacao.publicante != request.user %}
+                <div class="btn-group dropright float-right">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <strong><i class="fas fa-cogs"></i> </strong>
+                    </button>
+                    <div class="dropdown-menu bg-secondary">
+                      <a href="{% url 'request_denunciar_publicacao' pub_id=p.publicacao.id %}" class="dropdown-item text-white bg-dark"> <strong> <i class="fas fa-thumbs-down"></i> Denunciar publicação</strong> </a>
+                      <a href="{% url 'request_denunciar_usuario' usuario_id=p.publicacao.publicante.id %}" class="dropdown-item text-white bg-dark"> <strong><i class="fas fa-thumbs-down"></i> Denunciar publicante </strong></a>
+                    </div>
+                </div>
+        {% endif %}    
+    </div>
+</div>
+</center>
